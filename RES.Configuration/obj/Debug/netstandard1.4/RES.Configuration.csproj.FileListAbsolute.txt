@@ -1,0 +1,3 @@
+C:\Repos\GitHub\configuration\RES.Configuration\bin\Debug\netstandard1.4\RES.Configuration.deps.json
+C:\Repos\GitHub\configuration\RES.Configuration\obj\Debug\netstandard1.4\RES.Configuration.csproj.CoreCompileInputs.cache
+C:\Repos\GitHub\configuration\RES.Configuration\obj\Debug\netstandard1.4\RES.Configuration.AssemblyInfo.cs

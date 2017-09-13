@@ -1,0 +1,6 @@
+C:\Repos\GitHub\configuration\BuiltDLLs\Debug\RES.Configuration.dll
+C:\Repos\GitHub\configuration\BuiltDLLs\Debug\RES.Configuration.pdb
+C:\Repos\GitHub\configuration\RES.Configuration\obj\Debug\RES.Configuration.csproj.CoreCompileInputs.cache
+C:\Repos\GitHub\configuration\RES.Configuration\obj\Debug\RES.Configuration.AssemblyInfo.cs
+C:\Repos\GitHub\configuration\RES.Configuration\obj\Debug\RES.Configuration.dll
+C:\Repos\GitHub\configuration\RES.Configuration\obj\Debug\RES.Configuration.pdb

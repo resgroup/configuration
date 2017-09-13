@@ -1,0 +1,145 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETFramework,Version=v4.0": {
+      "Moq/4.2.1510.2205": {
+        "type": "package",
+        "compile": {
+          "lib/net40/Moq.dll": {}
+        },
+        "runtime": {
+          "lib/net40/Moq.dll": {}
+        }
+      },
+      "NUnit/3.8.1": {
+        "type": "package",
+        "compile": {
+          "lib/net40/nunit.framework.dll": {}
+        },
+        "runtime": {
+          "lib/net40/nunit.framework.dll": {}
+        }
+      },
+      "RES.Configuration/1.0.0": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.0",
+        "compile": {
+          "bin/placeholder/RES.Configuration.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/RES.Configuration.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Moq/4.2.1510.2205": {
+      "sha512": "nqMoHSP5f04/kyKbRUjGgzqtIb5LUUs0H6llHOkQJ5Takx4Ezr2H+59pkIgxkmpbHAcGmc/KsyRZUs1ehnPYag==",
+      "type": "package",
+      "path": "moq/4.2.1510.2205",
+      "files": [
+        "Moq.4.2.1510.2205.nupkg.sha512",
+        "Moq.nuspec",
+        "lib/net35/Moq.dll",
+        "lib/net35/Moq.xml",
+        "lib/net40/Moq.dll",
+        "lib/net40/Moq.xml",
+        "lib/sl5/Moq.Silverlight.dll",
+        "lib/sl5/Moq.Silverlight.xml"
+      ]
+    },
+    "NUnit/3.8.1": {
+      "sha512": "q+juwqFVwJcTvxF5rOa+4RbEkFb8pWbTH7U1wkMw3cWiUiH1gGTegJemvuCODjtT7DSo73/iMhUqc2+TmM/Nng==",
+      "type": "package",
+      "path": "nunit/3.8.1",
+      "files": [
+        "CHANGES.md",
+        "LICENSE.txt",
+        "NOTICES.txt",
+        "lib/monoandroid/nunit.framework.dll",
+        "lib/monoandroid/nunit.framework.xml",
+        "lib/net20/NUnit.System.Linq.dll",
+        "lib/net20/nunit.framework.dll",
+        "lib/net20/nunit.framework.xml",
+        "lib/net35/nunit.framework.dll",
+        "lib/net35/nunit.framework.xml",
+        "lib/net40/nunit.framework.dll",
+        "lib/net40/nunit.framework.xml",
+        "lib/net45/nunit.framework.dll",
+        "lib/net45/nunit.framework.xml",
+        "lib/netstandard1.3/nunit.framework.dll",
+        "lib/netstandard1.3/nunit.framework.xml",
+        "lib/netstandard1.6/nunit.framework.dll",
+        "lib/netstandard1.6/nunit.framework.xml",
+        "lib/uap/nunit.framework.dll",
+        "lib/uap/nunit.framework.xml",
+        "lib/xamarin.ios/nunit.framework.dll",
+        "lib/xamarin.ios/nunit.framework.xml",
+        "nunit.3.8.1.nupkg.sha512",
+        "nunit.nuspec"
+      ]
+    },
+    "RES.Configuration/1.0.0": {
+      "type": "project",
+      "path": "../RES.Configuration/RES.Configuration.csproj",
+      "msbuildProject": "../RES.Configuration/RES.Configuration.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETFramework,Version=v4.0": [
+      "Moq >= 4.2.1510.2205",
+      "NUnit >= 3.8.1",
+      "RES.Configuration >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\cburge\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restoreSettings": {
+      "hideWarningsAndErrors": true
+    },
+    "restore": {
+      "projectUniqueName": "C:\\Repos\\GitHub\\configuration\\RES.Configuration.Test\\RES.Configuration.Test.csproj",
+      "projectName": "RES.Configuration.Test",
+      "projectPath": "C:\\Repos\\GitHub\\configuration\\RES.Configuration.Test\\RES.Configuration.Test.csproj",
+      "packagesPath": "C:\\Users\\cburge\\.nuget\\packages\\",
+      "outputPath": "C:\\Repos\\GitHub\\configuration\\RES.Configuration.Test\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\cburge\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net40"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net40": {
+          "projectReferences": {
+            "C:\\Repos\\GitHub\\configuration\\RES.Configuration\\RES.Configuration.csproj": {
+              "projectPath": "C:\\Repos\\GitHub\\configuration\\RES.Configuration\\RES.Configuration.csproj"
+            }
+          }
+        }
+      }
+    },
+    "frameworks": {
+      "net40": {
+        "dependencies": {
+          "Moq": {
+            "target": "Package",
+            "version": "4.2.1510.2205"
+          },
+          "NUnit": {
+            "target": "Package",
+            "version": "3.8.1"
+          }
+        }
+      }
+    }
+  }
+}
