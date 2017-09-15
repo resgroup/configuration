@@ -83,6 +83,17 @@ namespace RES.Configuration
 
             return (T)Enum.Parse(typeof(T), GetString(prefix, method));
         }
+
+        public T GetEnumWithDefault<T>(MethodBase method, T defaultValue)
+            where T : struct, IConvertible =>
+                GetEnumWithDefault(NO_PREFIX, method, defaultValue);
+
+        public T GetEnumWithDefault<T>(string prefix, MethodBase method, T defaultValue)
+            where T : struct, IConvertible =>
+                IsMissing(prefix, method)
+                    ? defaultValue
+                    : GetEnum<T>(prefix, method);
+
         #endregion
 
         #region IntegerList settings
