@@ -11,18 +11,22 @@ namespace RES.Configuration.Test
     [TestFixture]
     public class ConfigurationIntegerListTest : ConfigurationTestBase
     {
-        private class TestIntegerListConfiguration : Configuration
+        class TestIntegerListConfiguration
         {
-            public IEnumerable<int> IntegerListProperty => GetIntegerList(MethodBase.GetCurrentMethod());
+            public IEnumerable<int> IntegerListProperty => configuration.GetIntegerList(MethodBase.GetCurrentMethod());
 
-            public TestIntegerListConfiguration(IConfigurationGetter configurationGetter)
-                : base(configurationGetter) { }
+            readonly Configuration configuration;
+
+            public TestIntegerListConfiguration(Configuration configuration)
+            {
+                this.configuration = configuration;
+            }
         }
 
         [Test]
         public void Get()
         {
-            var configuration = new TestIntegerListConfiguration(Setting("IntegerListProperty", "1,2"));
+            var configuration = new TestIntegerListConfiguration(ConfigurationWithSetting("IntegerListProperty", "1,2"));
 
             CollectionAssert.AreEqual(new List<int> { 1,2 }, configuration.IntegerListProperty);
         }
@@ -30,7 +34,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetMissing()
         {
-            var configuration = new TestIntegerListConfiguration(NoSettings);
+            var configuration = new TestIntegerListConfiguration(ConfigurationWithNoSettings);
 
             Assert.Throws<ConfigurationException>(
                 () => 
@@ -41,7 +45,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetUnParseable()
         {
-            var configuration = new TestIntegerListConfiguration(Setting("IntegerListProperty", "not parseable"));
+            var configuration = new TestIntegerListConfiguration(ConfigurationWithSetting("IntegerListProperty", "not parseable"));
 
             Assert.Throws<FormatException>(
                 () =>

@@ -14,7 +14,7 @@ namespace RES.Configuration.Test
         const string UK_PREFIX = "Uk-";
         const double DEFAULT = -1234098.2435;
 
-        private class TestDoubleConfiguration
+        class TestDoubleConfiguration
         {
             public double DoubleProperty => configuration.GetDoubleWithDefault(UK_PREFIX, MethodBase.GetCurrentMethod(), DEFAULT);
 

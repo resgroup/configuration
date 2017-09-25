@@ -11,7 +11,7 @@ namespace RES.Configuration.Test
     [TestFixture]
     public class ConfigurationBooleanTest : ConfigurationTestBase
     {
-        private class TestBooleanConfiguration
+        class TestBooleanConfiguration
         {
             public bool BooleanProperty => configuration.GetBool(MethodBase.GetCurrentMethod());
 

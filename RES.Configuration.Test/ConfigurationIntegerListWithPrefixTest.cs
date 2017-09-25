@@ -13,18 +13,22 @@ namespace RES.Configuration.Test
     {
         const string UK_PREFIX = "Uk-";
 
-        private class TestIntegerListConfiguration : Configuration
+        class TestIntegerListConfiguration
         {
-            public IEnumerable<int> IntegerListProperty => GetIntegerList(UK_PREFIX, MethodBase.GetCurrentMethod());
+            public IEnumerable<int> IntegerListProperty => configuration.GetIntegerList(UK_PREFIX, MethodBase.GetCurrentMethod());
 
-            public TestIntegerListConfiguration(IConfigurationGetter configurationGetter)
-                : base(configurationGetter) { }
+            readonly Configuration configuration;
+
+            public TestIntegerListConfiguration(Configuration configuration)
+            {
+                this.configuration = configuration;
+            }
         }
 
         [Test]
         public void Get()
         {
-            var configuration = new TestIntegerListConfiguration(Setting($"{UK_PREFIX}IntegerListProperty", "2,3"));
+            var configuration = new TestIntegerListConfiguration(ConfigurationWithSetting($"{UK_PREFIX}IntegerListProperty", "2,3"));
 
             CollectionAssert.AreEqual(new List<int> { 2, 3 }, configuration.IntegerListProperty);
         }
@@ -32,7 +36,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetMissing()
         {
-            var configuration = new TestIntegerListConfiguration(NoSettings);
+            var configuration = new TestIntegerListConfiguration(ConfigurationWithNoSettings);
 
             Assert.Throws<ConfigurationException>(
                 () =>
@@ -43,7 +47,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetUnParseable()
         {
-            var configuration = new TestIntegerListConfiguration(Setting($"{UK_PREFIX}IntegerListProperty", "not parseable"));
+            var configuration = new TestIntegerListConfiguration(ConfigurationWithSetting($"{UK_PREFIX}IntegerListProperty", "not parseable"));
 
             Assert.Throws<FormatException>(
                 () =>

@@ -14,12 +14,16 @@ namespace RES.Configuration.Test
         const string UK_PREFIX = "Uk-";
         static IEnumerable<int> DEFAULT = new List<int> { 1,2 };
 
-        private class TestIntegerListConfiguration : Configuration
+        class TestIntegerListConfiguration
         {
-            public IEnumerable<int> IntegerListProperty => GetIntegerListWithDefault(UK_PREFIX, MethodBase.GetCurrentMethod(), DEFAULT);
+            public IEnumerable<int> IntegerListProperty => configuration.GetIntegerListWithDefault(UK_PREFIX, MethodBase.GetCurrentMethod(), DEFAULT);
 
-            public TestIntegerListConfiguration(IConfigurationGetter configurationGetter)
-                : base(configurationGetter) { }
+            readonly Configuration configuration;
+
+            public TestIntegerListConfiguration(Configuration configuration)
+            {
+                this.configuration = configuration;
+            }
         }
 
         [Test]
@@ -28,7 +32,7 @@ namespace RES.Configuration.Test
             // This test makes sure that if there is a config setting then it is used in place of the default. Make sure that the default value and the config value are different.
             const string CONFIG = "3,4";
             
-            var configuration = new TestIntegerListConfiguration(Setting($"{UK_PREFIX}IntegerListProperty", CONFIG));
+            var configuration = new TestIntegerListConfiguration(ConfigurationWithSetting($"{UK_PREFIX}IntegerListProperty", CONFIG));
 
             var expected = new List<int> { 3, 4 };
 
@@ -38,7 +42,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetMissing()
         {
-            var configuration = new TestIntegerListConfiguration(NoSettings);
+            var configuration = new TestIntegerListConfiguration(ConfigurationWithNoSettings);
 
             Assert.AreEqual(DEFAULT, configuration.IntegerListProperty);
         }

@@ -14,7 +14,7 @@ namespace RES.Configuration.Test
         const string UK_PREFIX = "Uk-";
         const bool DEFAULT = true;
 
-        private class TestBooleanConfiguration
+        class TestBooleanConfiguration
         {
             public bool BooleanProperty => configuration.GetBoolWithDefault(UK_PREFIX, MethodBase.GetCurrentMethod(), DEFAULT);
 
