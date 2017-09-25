@@ -13,18 +13,22 @@ namespace RES.Configuration.Test
     {
         const string UK_PREFIX = "Uk-";
 
-        private class TestDoubleConfiguration : Configuration
+        class TestDoubleConfiguration
         {
-            public double DoubleProperty => GetDouble(UK_PREFIX, MethodBase.GetCurrentMethod());
+            public double DoubleProperty => configuration.GetDouble(UK_PREFIX, MethodBase.GetCurrentMethod());
 
-            public TestDoubleConfiguration(IConfigurationGetter configurationGetter)
-                : base(configurationGetter) { }
+            readonly Configuration configuration;
+
+            public TestDoubleConfiguration(Configuration configuration)
+            {
+                this.configuration = configuration;
+            }
         }
 
         [Test]
         public void Get()
         {
-            var configuration = new TestDoubleConfiguration(Setting($"{UK_PREFIX}DoubleProperty", "234"));
+            var configuration = new TestDoubleConfiguration(ConfigurationWithSetting($"{UK_PREFIX}DoubleProperty", "234"));
 
             Assert.AreEqual(234, configuration.DoubleProperty);
         }
@@ -32,7 +36,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetMissing()
         {
-            var configuration = new TestDoubleConfiguration(NoSettings);
+            var configuration = new TestDoubleConfiguration(ConfigurationWithNoSettings);
 
             Assert.Throws<ConfigurationException>(
                 () =>
@@ -43,7 +47,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetUnParseable()
         {
-            var configuration = new TestDoubleConfiguration(Setting($"{UK_PREFIX}DoubleProperty", "not parseable"));
+            var configuration = new TestDoubleConfiguration(ConfigurationWithSetting($"{UK_PREFIX}DoubleProperty", "not parseable"));
 
             Assert.Throws<FormatException>(
                 () =>

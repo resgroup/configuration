@@ -11,18 +11,22 @@ namespace RES.Configuration.Test
     [TestFixture]
     public class ConfigurationDoubleTest : ConfigurationTestBase
     {
-        private class TestDoubleConfiguration : Configuration
+        class TestDoubleConfiguration
         {
-            public double DoubleProperty => GetDouble(MethodBase.GetCurrentMethod());
+            public double DoubleProperty => configuration.GetDouble(MethodBase.GetCurrentMethod());
 
-            public TestDoubleConfiguration(IConfigurationGetter configurationGetter)
-                : base(configurationGetter) { }
+            readonly Configuration configuration;
+
+            public TestDoubleConfiguration(Configuration configuration)
+            {
+                this.configuration = configuration;
+            }
         }
 
         [Test]
         public void Get()
         {
-            var configuration = new TestDoubleConfiguration(Setting("DoubleProperty", "2"));
+            var configuration = new TestDoubleConfiguration(ConfigurationWithSetting("DoubleProperty", "2"));
 
             Assert.AreEqual(2, configuration.DoubleProperty);
         }
@@ -30,7 +34,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetMissing()
         {
-            var configuration = new TestDoubleConfiguration(NoSettings);
+            var configuration = new TestDoubleConfiguration(ConfigurationWithNoSettings);
 
             Assert.Throws<ConfigurationException>(
                 () => 
@@ -41,7 +45,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetUnParseable()
         {
-            var configuration = new TestDoubleConfiguration(Setting("DoubleProperty", "not parseable"));
+            var configuration = new TestDoubleConfiguration(ConfigurationWithSetting("DoubleProperty", "not parseable"));
 
             Assert.Throws<FormatException>(
                 () =>

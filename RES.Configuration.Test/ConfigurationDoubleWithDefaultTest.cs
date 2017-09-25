@@ -11,15 +11,18 @@ namespace RES.Configuration.Test
     [TestFixture]
     public class ConfigurationDoubleWithDefaultTest : ConfigurationTestBase
     {
-        const string UK_PREFIX = "Uk-";
         const double DEFAULT = 4.1264;
 
-        private class TestDoubleConfiguration : Configuration
+        class TestDoubleConfiguration 
         {
-            public double DoubleProperty => GetDoubleWithDefault(MethodBase.GetCurrentMethod(), DEFAULT);
+            public double DoubleProperty => configuration.GetDoubleWithDefault(MethodBase.GetCurrentMethod(), DEFAULT);
 
-            public TestDoubleConfiguration(IConfigurationGetter configurationGetter)
-                : base(configurationGetter) { }
+            readonly Configuration configuration;
+
+            public TestDoubleConfiguration(Configuration configuration)
+            {
+                this.configuration = configuration;
+            }
         }
 
         [Test]
@@ -27,7 +30,7 @@ namespace RES.Configuration.Test
         {
             // This test makes sure that if there is a config setting then it is used in place of the default. Make sure that the default value and the config value are different.
             const double CONFIG = DEFAULT + 1;
-            var configuration = new TestDoubleConfiguration(Setting("DoubleProperty", $"{CONFIG}"));
+            var configuration = new TestDoubleConfiguration(ConfigurationWithSetting("DoubleProperty", $"{CONFIG}"));
 
             Assert.AreEqual(CONFIG, configuration.DoubleProperty);
         }
@@ -35,7 +38,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetMissing()
         {
-            var configuration = new TestDoubleConfiguration(NoSettings);
+            var configuration = new TestDoubleConfiguration(ConfigurationWithNoSettings);
 
             Assert.AreEqual(DEFAULT, configuration.DoubleProperty);
         }
@@ -43,7 +46,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetUnParseable()
         {
-            var configuration = new TestDoubleConfiguration(Setting("DoubleProperty", "not parseable"));
+            var configuration = new TestDoubleConfiguration(ConfigurationWithSetting("DoubleProperty", "not parseable"));
 
             Assert.Throws<FormatException>(
                 () =>
