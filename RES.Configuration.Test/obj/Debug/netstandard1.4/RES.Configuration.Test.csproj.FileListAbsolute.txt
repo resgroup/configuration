@@ -1,4 +1,0 @@
-C:\Repos\GitHub\configuration\RES.Configuration.Test\bin\Debug\netstandard1.4\RES.Configuration.Test.deps.json
-C:\Repos\GitHub\configuration\RES.Configuration.Test\obj\Debug\netstandard1.4\RES.Configuration.Test.csprojResolveAssemblyReference.cache
-C:\Repos\GitHub\configuration\RES.Configuration.Test\obj\Debug\netstandard1.4\RES.Configuration.Test.csproj.CoreCompileInputs.cache
-C:\Repos\GitHub\configuration\RES.Configuration.Test\obj\Debug\netstandard1.4\RES.Configuration.Test.AssemblyInfo.cs

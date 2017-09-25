@@ -1,7 +1,0 @@
-C:\Repos\GitHub\configuration\BuiltDLLs\Debug\RES.Configuration.Test.dll
-C:\Repos\GitHub\configuration\RES.Configuration.Test\obj\Debug\RES.Configuration.Test.csproj.CoreCompileInputs.cache
-C:\Repos\GitHub\configuration\RES.Configuration.Test\obj\Debug\RES.Configuration.Test.AssemblyInfo.cs
-C:\Repos\GitHub\configuration\RES.Configuration.Test\obj\Debug\RES.Configuration.Test.csprojResolveAssemblyReference.cache
-C:\Repos\GitHub\configuration\BuiltDLLs\Debug\RES.Configuration.Test.pdb
-C:\Repos\GitHub\configuration\RES.Configuration.Test\obj\Debug\RES.Configuration.Test.dll
-C:\Repos\GitHub\configuration\RES.Configuration.Test\obj\Debug\RES.Configuration.Test.pdb
