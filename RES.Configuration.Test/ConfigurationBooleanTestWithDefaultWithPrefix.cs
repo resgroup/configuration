@@ -14,12 +14,16 @@ namespace RES.Configuration.Test
         const string UK_PREFIX = "Uk-";
         const bool DEFAULT = true;
 
-        private class TestBooleanConfiguration : Configuration
+        private class TestBooleanConfiguration
         {
-            public bool BooleanProperty => GetBoolWithDefault(UK_PREFIX, MethodBase.GetCurrentMethod(), DEFAULT);
+            public bool BooleanProperty => configuration.GetBoolWithDefault(UK_PREFIX, MethodBase.GetCurrentMethod(), DEFAULT);
 
-            public TestBooleanConfiguration(IConfigurationGetter configurationGetter)
-                : base(configurationGetter) { }
+            readonly Configuration configuration;
+
+            public TestBooleanConfiguration(Configuration configuration)
+            {
+                this.configuration = configuration;
+            }
         }
 
         [Test]
@@ -27,7 +31,7 @@ namespace RES.Configuration.Test
         {
             // This test makes sure that if there is a config setting then it is used in place of the default. Make sure that the default value and the config value are different.
             const bool CONFIG = !DEFAULT;
-            var configuration = new TestBooleanConfiguration(Setting($"{UK_PREFIX}BooleanProperty", $"{CONFIG}"));
+            var configuration = new TestBooleanConfiguration(ConfigurationWithSetting($"{UK_PREFIX}BooleanProperty", $"{CONFIG}"));
 
             Assert.AreEqual(CONFIG, configuration.BooleanProperty);
         }
@@ -35,7 +39,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetMissing()
         {
-            var configuration = new TestBooleanConfiguration(NoSettings);
+            var configuration = new TestBooleanConfiguration(ConfigurationWithNoSettings);
 
             Assert.AreEqual(DEFAULT, configuration.BooleanProperty);
         }
@@ -43,7 +47,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetUnParseable()
         {
-            var configuration = new TestBooleanConfiguration(Setting($"{UK_PREFIX}BooleanProperty", "not parseable"));
+            var configuration = new TestBooleanConfiguration(ConfigurationWithSetting($"{UK_PREFIX}BooleanProperty", "not parseable"));
 
             Assert.Throws<FormatException>(
                 () =>

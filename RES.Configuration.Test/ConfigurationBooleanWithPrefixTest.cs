@@ -13,18 +13,22 @@ namespace RES.Configuration.Test
     {
         const string UK_PREFIX = "Uk-";
 
-        private class TestBooleanConfiguration : Configuration
+        private class TestBooleanConfiguration
         {
-            public bool BooleanProperty => GetBool(UK_PREFIX, MethodBase.GetCurrentMethod());
+            public bool BooleanProperty => configuration.GetBool(UK_PREFIX, MethodBase.GetCurrentMethod());
 
-            public TestBooleanConfiguration(IConfigurationGetter configurationGetter)
-                : base(configurationGetter) { }
+            readonly Configuration configuration;
+
+            public TestBooleanConfiguration(Configuration configuration)
+            {
+                this.configuration = configuration;
+            }
         }
 
         [Test]
         public void Get()
         {
-            var configuration = new TestBooleanConfiguration(Setting($"{UK_PREFIX}BooleanProperty", "false"));
+            var configuration = new TestBooleanConfiguration(ConfigurationWithSetting($"{UK_PREFIX}BooleanProperty", "false"));
 
             Assert.AreEqual(false, configuration.BooleanProperty);
         }
@@ -32,7 +36,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetMissing()
         {
-            var configuration = new TestBooleanConfiguration(NoSettings);
+            var configuration = new TestBooleanConfiguration(ConfigurationWithNoSettings);
 
             Assert.Throws<ConfigurationException>(
                 () =>
@@ -43,7 +47,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetUnParseable()
         {
-            var configuration = new TestBooleanConfiguration(Setting($"{UK_PREFIX}BooleanProperty", "not parseable"));
+            var configuration = new TestBooleanConfiguration(ConfigurationWithSetting($"{UK_PREFIX}BooleanProperty", "not parseable"));
 
             Assert.Throws<FormatException>(
                 () =>

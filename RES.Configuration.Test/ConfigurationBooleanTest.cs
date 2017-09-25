@@ -11,18 +11,22 @@ namespace RES.Configuration.Test
     [TestFixture]
     public class ConfigurationBooleanTest : ConfigurationTestBase
     {
-        private class TestBooleanConfiguration : Configuration
+        private class TestBooleanConfiguration
         {
-            public bool BooleanProperty => GetBool(MethodBase.GetCurrentMethod());
+            public bool BooleanProperty => configuration.GetBool(MethodBase.GetCurrentMethod());
 
-            public TestBooleanConfiguration(IConfigurationGetter configurationGetter)
-                : base(configurationGetter) { }
+            readonly Configuration configuration;
+
+            public TestBooleanConfiguration(Configuration configuration)
+            {
+                this.configuration = configuration;
+            }
         }
 
         [Test]
         public void Get()
         {
-            var configuration = new TestBooleanConfiguration(Setting("BooleanProperty", "true"));
+            var configuration = new TestBooleanConfiguration(ConfigurationWithSetting("BooleanProperty", "true"));
 
             Assert.AreEqual(true, configuration.BooleanProperty);
         }
@@ -30,7 +34,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetMissing()
         {
-            var configuration = new TestBooleanConfiguration(NoSettings);
+            var configuration = new TestBooleanConfiguration(ConfigurationWithNoSettings);
 
             Assert.Throws<ConfigurationException>(
                 () => 
@@ -41,7 +45,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetUnParseable()
         {
-            var configuration = new TestBooleanConfiguration(Setting("BooleanProperty", "not parseable"));
+            var configuration = new TestBooleanConfiguration(ConfigurationWithSetting("BooleanProperty", "not parseable"));
 
             Assert.Throws<FormatException>(
                 () =>
