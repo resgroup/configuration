@@ -1,6 +1,0 @@
-C:\Repos\GitHub\configuration\BuiltDLLs\Release\RES.Configuration.dll
-C:\Repos\GitHub\configuration\BuiltDLLs\Release\RES.Configuration.pdb
-C:\Repos\GitHub\configuration\RES.Configuration\obj\Release\RES.Configuration.csproj.CoreCompileInputs.cache
-C:\Repos\GitHub\configuration\RES.Configuration\obj\Release\RES.Configuration.AssemblyInfo.cs
-C:\Repos\GitHub\configuration\RES.Configuration\obj\Release\RES.Configuration.dll
-C:\Repos\GitHub\configuration\RES.Configuration\obj\Release\RES.Configuration.pdb
