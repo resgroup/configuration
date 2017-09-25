@@ -13,12 +13,16 @@ namespace RES.Configuration.Test
     {
         const string UK_PREFIX = "Uk-";
 
-        private class TestStringConfiguration : Configuration
+        class TestStringConfiguration
         {
-            public string StringProperty => GetString(UK_PREFIX, MethodBase.GetCurrentMethod());
+            public string StringProperty => configuration.GetString(UK_PREFIX, MethodBase.GetCurrentMethod());
 
-            public TestStringConfiguration(IConfigurationGetter configurationGetter)
-                : base(configurationGetter) { }
+            readonly Configuration configuration;
+
+            public TestStringConfiguration(Configuration configuration)
+            {
+                this.configuration = configuration;
+            }
         }
 
         [Test]
@@ -26,7 +30,7 @@ namespace RES.Configuration.Test
         {
             const string CONFIG = "config";
 
-            var configuration = new TestStringConfiguration(Setting($"{UK_PREFIX}StringProperty", CONFIG));
+            var configuration = new TestStringConfiguration(ConfigurationWithSetting($"{UK_PREFIX}StringProperty", CONFIG));
 
             Assert.AreEqual(CONFIG, configuration.StringProperty);
         }
@@ -34,7 +38,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetMissing()
         {
-            var configuration = new TestStringConfiguration(NoSettings);
+            var configuration = new TestStringConfiguration(ConfigurationWithNoSettings);
 
             Assert.Throws<ConfigurationException>(
                 () =>

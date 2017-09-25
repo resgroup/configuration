@@ -11,15 +11,18 @@ namespace RES.Configuration.Test
     [TestFixture]
     public class ConfigurationStringWithDefaultTest : ConfigurationTestBase
     {
-        const string UK_PREFIX = "Uk-";
         const string DEFAULT = "default";
 
-        private class TestStringConfiguration : Configuration
+        class TestStringConfiguration
         {
-            public string StringProperty => GetStringWithDefault(MethodBase.GetCurrentMethod(), DEFAULT);
+            public string StringProperty => configuration.GetStringWithDefault(MethodBase.GetCurrentMethod(), DEFAULT);
 
-            public TestStringConfiguration(IConfigurationGetter configurationGetter)
-                : base(configurationGetter) { }
+            readonly Configuration configuration;
+
+            public TestStringConfiguration(Configuration configuration)
+            {
+                this.configuration = configuration;
+            }
         }
 
         [Test]
@@ -27,7 +30,7 @@ namespace RES.Configuration.Test
         {
             // This test makes sure that if there is a config setting then it is used in place of the default. Make sure that the default value and the config value are different.
             const string CONFIG = "not " + DEFAULT;
-            var configuration = new TestStringConfiguration(Setting("StringProperty", $"{CONFIG}"));
+            var configuration = new TestStringConfiguration(ConfigurationWithSetting("StringProperty", $"{CONFIG}"));
 
             Assert.AreEqual(CONFIG, configuration.StringProperty);
         }
@@ -35,7 +38,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetMissing()
         {
-            var configuration = new TestStringConfiguration(NoSettings);
+            var configuration = new TestStringConfiguration(ConfigurationWithNoSettings);
 
             Assert.AreEqual(DEFAULT, configuration.StringProperty);
         }

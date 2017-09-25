@@ -11,12 +11,16 @@ namespace RES.Configuration.Test
     [TestFixture]
     public class ConfigurationStringTest : ConfigurationTestBase
     {
-        private class TestStringConfiguration : Configuration
+        class TestStringConfiguration
         {
-            public string StringProperty => GetString(MethodBase.GetCurrentMethod());
+            public string StringProperty => configuration.GetString(MethodBase.GetCurrentMethod());
 
-            public TestStringConfiguration(IConfigurationGetter configurationGetter)
-                : base(configurationGetter) { }
+            readonly Configuration configuration;
+
+            public TestStringConfiguration(Configuration configuration)
+            {
+                this.configuration = configuration;
+            }
         }
 
         [Test]
@@ -24,7 +28,7 @@ namespace RES.Configuration.Test
         {
             const string CONFIG = "cedd";
 
-            var configuration = new TestStringConfiguration(Setting("StringProperty", CONFIG));
+            var configuration = new TestStringConfiguration(ConfigurationWithSetting("StringProperty", CONFIG));
 
             Assert.AreEqual(CONFIG, configuration.StringProperty);
         }
@@ -32,10 +36,10 @@ namespace RES.Configuration.Test
         [Test]
         public void GetMissing()
         {
-            var configuration = new TestStringConfiguration(NoSettings);
+            var configuration = new TestStringConfiguration(ConfigurationWithNoSettings);
 
             Assert.Throws<ConfigurationException>(
-                () => 
+                () =>
                 { var v = configuration.StringProperty; }
             );
         }
