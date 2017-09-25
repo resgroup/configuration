@@ -14,12 +14,16 @@ namespace RES.Configuration.Test
         const string UK_PREFIX = "Uk-";
         const int DEFAULT = -1234098;
 
-        private class TestIntegerConfiguration : Configuration
+        class TestIntegerConfiguration
         {
-            public int IntegerProperty => GetIntWithDefault(UK_PREFIX, MethodBase.GetCurrentMethod(), DEFAULT);
+            public int IntegerProperty => configuration.GetIntWithDefault(UK_PREFIX, MethodBase.GetCurrentMethod(), DEFAULT);
 
-            public TestIntegerConfiguration(IConfigurationGetter configurationGetter)
-                : base(configurationGetter) { }
+            readonly Configuration configuration;
+
+            public TestIntegerConfiguration(Configuration configuration)
+            {
+                this.configuration = configuration;
+            }
         }
 
         [Test]
@@ -27,7 +31,7 @@ namespace RES.Configuration.Test
         {
             // This test makes sure that if there is a config setting then it is used in place of the default. Make sure that the default value and the config value are different.
             const int CONFIG = DEFAULT + 1;
-            var configuration = new TestIntegerConfiguration(Setting($"{UK_PREFIX}IntegerProperty", $"{CONFIG}"));
+            var configuration = new TestIntegerConfiguration(ConfigurationWithSetting($"{UK_PREFIX}IntegerProperty", $"{CONFIG}"));
 
             Assert.AreEqual(CONFIG, configuration.IntegerProperty);
         }
@@ -35,7 +39,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetMissing()
         {
-            var configuration = new TestIntegerConfiguration(NoSettings);
+            var configuration = new TestIntegerConfiguration(ConfigurationWithNoSettings);
 
             Assert.AreEqual(DEFAULT, configuration.IntegerProperty);
         }
@@ -43,7 +47,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetUnParseable()
         {
-            var configuration = new TestIntegerConfiguration(Setting($"{UK_PREFIX}IntegerProperty", "not parseable"));
+            var configuration = new TestIntegerConfiguration(ConfigurationWithSetting($"{UK_PREFIX}IntegerProperty", "not parseable"));
 
             Assert.Throws<FormatException>(
                 () =>

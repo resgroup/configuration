@@ -50,7 +50,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetUnParseable()
         {
-            var configuration = new TestIntegerListConfiguration(Setting($"{UK_PREFIX}IntegerListProperty", "not parseable"));
+            var configuration = new TestIntegerListConfiguration(ConfigurationWithSetting($"{UK_PREFIX}IntegerListProperty", "not parseable"));
 
             Assert.Throws<FormatException>(
                 () =>

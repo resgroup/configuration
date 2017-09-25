@@ -11,18 +11,22 @@ namespace RES.Configuration.Test
     [TestFixture]
     public class ConfigurationIntegerTest : ConfigurationTestBase
     {
-        private class TestIntegerConfiguration : Configuration
+        class TestIntegerConfiguration
         {
-            public int IntegerProperty => GetInt(MethodBase.GetCurrentMethod());
+            public int IntegerProperty => configuration.GetInt(MethodBase.GetCurrentMethod());
 
-            public TestIntegerConfiguration(IConfigurationGetter configurationGetter)
-                : base(configurationGetter) { }
+            readonly Configuration configuration;
+
+            public TestIntegerConfiguration(Configuration configuration)
+            {
+                this.configuration = configuration;
+            }
         }
 
         [Test]
         public void Get()
         {
-            var configuration = new TestIntegerConfiguration(Setting("IntegerProperty", "2"));
+            var configuration = new TestIntegerConfiguration(ConfigurationWithSetting("IntegerProperty", "2"));
 
             Assert.AreEqual(2, configuration.IntegerProperty);
         }
@@ -30,7 +34,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetMissing()
         {
-            var configuration = new TestIntegerConfiguration(NoSettings);
+            var configuration = new TestIntegerConfiguration(ConfigurationWithNoSettings);
 
             Assert.Throws<ConfigurationException>(
                 () => 
@@ -41,7 +45,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetUnParseable()
         {
-            var configuration = new TestIntegerConfiguration(Setting("IntegerProperty", "not parseable"));
+            var configuration = new TestIntegerConfiguration(ConfigurationWithSetting("IntegerProperty", "not parseable"));
 
             Assert.Throws<FormatException>(
                 () =>

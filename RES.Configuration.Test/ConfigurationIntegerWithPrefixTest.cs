@@ -13,18 +13,22 @@ namespace RES.Configuration.Test
     {
         const string UK_PREFIX = "Uk-";
 
-        private class TestIntegerConfiguration : Configuration
+        class TestIntegerConfiguration
         {
-            public int IntegerProperty => GetInt(UK_PREFIX, MethodBase.GetCurrentMethod());
+            public int IntegerProperty => configuration.GetInt(UK_PREFIX, MethodBase.GetCurrentMethod());
 
-            public TestIntegerConfiguration(IConfigurationGetter configurationGetter)
-                : base(configurationGetter) { }
+            readonly Configuration configuration;
+
+            public TestIntegerConfiguration(Configuration configuration)
+            {
+                this.configuration = configuration;
+            }
         }
 
         [Test]
         public void Get()
         {
-            var configuration = new TestIntegerConfiguration(Setting($"{UK_PREFIX}IntegerProperty", "234"));
+            var configuration = new TestIntegerConfiguration(ConfigurationWithSetting($"{UK_PREFIX}IntegerProperty", "234"));
 
             Assert.AreEqual(234, configuration.IntegerProperty);
         }
@@ -32,7 +36,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetMissing()
         {
-            var configuration = new TestIntegerConfiguration(NoSettings);
+            var configuration = new TestIntegerConfiguration(ConfigurationWithNoSettings);
 
             Assert.Throws<ConfigurationException>(
                 () =>
@@ -43,7 +47,7 @@ namespace RES.Configuration.Test
         [Test]
         public void GetUnParseable()
         {
-            var configuration = new TestIntegerConfiguration(Setting($"{UK_PREFIX}IntegerProperty", "not parseable"));
+            var configuration = new TestIntegerConfiguration(ConfigurationWithSetting($"{UK_PREFIX}IntegerProperty", "not parseable"));
 
             Assert.Throws<FormatException>(
                 () =>
