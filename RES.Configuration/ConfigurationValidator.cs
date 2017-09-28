@@ -16,9 +16,11 @@ namespace RES.Configuration
         public ConfigurationValidator()
             : this(new ConfigurationGetter()) { }
 
-        public ConfigurationValidator(IConfigurationGetter configurationGetter) 
+        public ConfigurationValidator(IConfigurationGetter configurationGetter)
             : base(configurationGetter)
         {
+            Requires(configurationGetter != null);
+
             errors = new List<string>();
         }
 
@@ -34,14 +36,26 @@ namespace RES.Configuration
         }
 
         #region string settings
-        public void Check(Expression<Func<string>> setting) =>
-            Check("", setting);
+        public void Check(Expression<Func<string>> setting)
+        {
+            Requires(setting != null);
 
-        public void Check(string prefix, Expression<Func<string>> setting) =>
+            Check("", setting);
+        }
+
+        public void Check(string prefix, Expression<Func<string>> setting)
+        {
+            Requires(prefix != null);
+            Requires(setting != null);
+
             CheckMissing(prefix, setting);
+        }
 
         public void CheckWithDefault(string prefix, Expression<Func<string>> setting)
         {
+            Requires(prefix != null);
+            Requires(setting != null);
+
             if (IsMissing(prefix, GetProperty(setting)) == false)
                 Check(prefix, setting);
         }
@@ -49,11 +63,16 @@ namespace RES.Configuration
         #endregion
 
         #region boolean settings
-        public void Check(Expression<Func<bool>> setting) =>
+        public void Check(Expression<Func<bool>> setting)
+        {
+            Requires(setting != null);
+
             Check("", setting);
+        }
 
         public void Check(string prefix, Expression<Func<bool>> setting)
         {
+            Requires(prefix != null);
             string propertyName = GetProperty(setting).Name;
 
             CheckMissing(prefix, setting);
@@ -63,11 +82,14 @@ namespace RES.Configuration
         }
 
         bool BoolSettingAvailableButNotParseable(string prefix, string propertyName) =>
-            IsMissing(prefix, propertyName) == false && 
+            IsMissing(prefix, propertyName) == false &&
             CanParseBool(prefix, propertyName) == false;
 
         public void CheckWithDefault(string prefix, Expression<Func<bool>> setting)
         {
+            Requires(prefix != null);
+            Requires(setting != null);
+
             if (IsMissing(prefix, GetProperty(setting)) == false)
                 Check(prefix, setting);
         }
@@ -83,11 +105,18 @@ namespace RES.Configuration
         #endregion
 
         #region int settings
-        public void Check(Expression<Func<int>> setting) =>
+        public void Check(Expression<Func<int>> setting)
+        {
+            Requires(setting != null);
+
             Check("", setting);
+        }
 
         public void Check(string prefix, Expression<Func<int>> setting)
         {
+            Requires(prefix != null);
+            Requires(setting != null);
+
             string propertyName = GetProperty(setting).Name;
 
             CheckMissing(prefix, setting);
@@ -102,7 +131,10 @@ namespace RES.Configuration
 
         public void CheckWithDefault(string prefix, Expression<Func<int>> setting)
         {
-            if (IsMissing(prefix, GetProperty(setting)) == false) 
+            Requires(prefix != null);
+            Requires(setting != null);
+
+            if (IsMissing(prefix, GetProperty(setting)) == false)
                 Check(prefix, setting);
         }
 
@@ -118,11 +150,18 @@ namespace RES.Configuration
         #endregion
 
         #region double settings
-        public void Check(Expression<Func<double>> setting) =>
+        public void Check(Expression<Func<double>> setting)
+        {
+            Requires(setting != null);
+
             Check("", setting);
+        }
 
         public void Check(string prefix, Expression<Func<double>> setting)
         {
+            Requires(prefix != null);
+            Requires(setting != null);
+
             string propertyName = GetProperty(setting).Name;
 
             CheckMissing(prefix, setting);
@@ -133,6 +172,9 @@ namespace RES.Configuration
 
         public void CheckWithDefault(string prefix, Expression<Func<double>> setting)
         {
+            Requires(prefix != null);
+            Requires(setting != null);
+
             if (IsMissing(prefix, GetProperty(setting)) == false)
                 Check(prefix, setting);
         }
@@ -156,6 +198,7 @@ namespace RES.Configuration
             where T : struct, IConvertible
         {
             Requires(typeof(T).IsEnum, "T must be an enumerated type");
+            Requires(setting != null);
 
             Check(NO_PREFIX, setting);
         }
@@ -164,6 +207,8 @@ namespace RES.Configuration
             where T : struct, IConvertible
         {
             Requires(typeof(T).IsEnum, "T must be an enumerated type");
+            Requires(prefix != null);
+            Requires(setting != null);
 
             CheckMissing(prefix, setting);
 
@@ -175,7 +220,7 @@ namespace RES.Configuration
                 errors.Add($"The {prefix}{propertyName} setting ('{GetString(prefix + property.Name)}') can not be converted to a {typeof(T).Name}");
         }
 
-        bool EnumSettingAvailableButNotParseable<T>(string prefix, string propertyName) 
+        bool EnumSettingAvailableButNotParseable<T>(string prefix, string propertyName)
             where T : struct, IConvertible =>
                 IsMissing(prefix, propertyName) == false &&
                 CanParseEnum<T>(prefix, propertyName) == false;
@@ -194,12 +239,18 @@ namespace RES.Configuration
         #endregion
 
         #region IntegerList settings
-        public void Check(Expression<Func<IEnumerable<int>>> setting) =>
-            Check("", setting);
+        public void Check(Expression<Func<IEnumerable<int>>> setting)
+        {
+            Requires(setting != null);
 
+            Check("", setting);
+        }
 
         public void Check(string prefix, Expression<Func<IEnumerable<int>>> setting)
         {
+            Requires(prefix != null);
+            Requires(setting != null);
+
             string propertyName = GetProperty(setting).Name;
 
             CheckMissing(prefix, setting);
@@ -210,6 +261,9 @@ namespace RES.Configuration
 
         public void CheckWithDefault(string prefix, Expression<Func<IEnumerable<int>>> setting)
         {
+            Requires(prefix != null);
+            Requires(setting != null);
+
             if (IsMissing(prefix, GetProperty(setting)) == false)
                 Check(prefix, setting);
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static System.Diagnostics.Contracts.Contract;
 
 namespace RES.Configuration
 {
@@ -11,6 +12,8 @@ namespace RES.Configuration
 
         public static bool CanParse(string separatedIntegers)
         {
+            Requires(separatedIntegers != null);
+
             if (EmptyList(separatedIntegers))
                 return true;
 
@@ -19,6 +22,8 @@ namespace RES.Configuration
 
         static bool CanParseList(string separatedIntegers)
         {
+            Requires(separatedIntegers != null);
+
             int irrelevant;
 
             return Split(separatedIntegers).All((s) => int.TryParse(s, out irrelevant));
@@ -26,6 +31,9 @@ namespace RES.Configuration
 
         public static IEnumerable<int> Parse(string separatedIntegers)
         {
+            Requires(separatedIntegers != null);
+            Ensures(Result<IEnumerable<int>>() != null);
+
             if (EmptyList(separatedIntegers))
                 yield break;
 
@@ -33,10 +41,18 @@ namespace RES.Configuration
                 yield return int.Parse(id);
         }
 
-        static bool EmptyList(string separatedIntegers) =>
-            string.IsNullOrWhiteSpace(separatedIntegers);
+        static bool EmptyList(string separatedIntegers)
+        {
+            Requires(separatedIntegers != null);
 
-        static IEnumerable<string> Split(string separatedIntegers) =>
-            separatedIntegers.Split(comma);
+            return string.IsNullOrWhiteSpace(separatedIntegers);
+        }
+
+        static IEnumerable<string> Split(string separatedIntegers)
+        {
+            Requires(separatedIntegers != null);
+
+            return separatedIntegers.Split(comma);
+        }
     }
 }

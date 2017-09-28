@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using static System.Diagnostics.Contracts.Contract;
+
 namespace RES.Configuration
 {
     public class ConfigurationBase
@@ -6,9 +7,11 @@ namespace RES.Configuration
         protected const string NO_PREFIX = "";
         protected readonly IConfigurationGetter configurationGetter;
 
-        internal ConfigurationBase(IConfigurationGetter configuration)
+        internal ConfigurationBase(IConfigurationGetter configurationGetter)
         {
-            this.configurationGetter = configuration;
+            Requires(configurationGetter != null);
+
+            this.configurationGetter = configurationGetter;
         }
 
         protected bool IsMissing(string prefix, string setting) =>
@@ -17,11 +20,17 @@ namespace RES.Configuration
         protected bool IsMissing(string setting) =>
             GetStringOrNull(setting) == null;
 
-        protected string GetString(string prefix, string setting) =>
-            GetString(prefix + setting);
+        protected string GetString(string prefix, string setting)
+        {
+            Ensures(Result<string>() != null);
+
+            return GetString(prefix + setting);
+        }
 
         protected string GetString(string setting)
         {
+            Ensures(Result<string>() != null);
+
             if (GetStringOrNull(setting) == null)
                 ThrowMissingSetting(setting);
 
