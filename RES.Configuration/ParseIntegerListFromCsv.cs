@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RES.Configuration
 {
-    static class ParseIntegerListFromCsv
+    public static class ParseIntegerListFromCsv
     {
         const char comma = ',';
 
