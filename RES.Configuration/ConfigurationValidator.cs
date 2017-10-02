@@ -9,6 +9,7 @@ using System.Linq;
 namespace RES.Configuration
 {
     // This class is getting quite long. Consider splitting it, probably by having one class for each thing being validated (eg BoolConfigurationValidator etc)
+    // Could have a base / helper class that handles keeping a record of the errors (eg list of errors, adderror, anyerrors, errormessages)
     public class ConfigurationValidator : ConfigurationBase, IDisposable
     {
         readonly List<string> errors;
@@ -73,17 +74,23 @@ namespace RES.Configuration
         public void Check(string prefix, Expression<Func<bool>> setting)
         {
             Requires(prefix != null);
+
             string propertyName = GetProperty(setting).Name;
 
             CheckMissing(prefix, setting);
 
             if (BoolSettingAvailableButNotParseable(prefix, propertyName))
-                errors.Add($"The {prefix}{propertyName} setting ('{GetString(prefix + propertyName)}') can not be converted to a boolean");
+                errors.Add($"The {prefix}{propertyName} setting ('{GetString(prefix, propertyName)}') can not be converted to a boolean");
         }
 
-        bool BoolSettingAvailableButNotParseable(string prefix, string propertyName) =>
-            IsMissing(prefix, propertyName) == false &&
+        bool BoolSettingAvailableButNotParseable(string prefix, string propertyName)
+        {
+            Requires(prefix != null);
+            Requires(propertyName != null);
+
+            return IsMissing(prefix, propertyName) == false &&
             CanParseBool(prefix, propertyName) == false;
+        }
 
         public void CheckWithDefault(string prefix, Expression<Func<bool>> setting)
         {
@@ -96,6 +103,9 @@ namespace RES.Configuration
 
         bool CanParseBool(string prefix, string propertyName)
         {
+            Requires(prefix != null);
+            Requires(propertyName != null);
+
             bool irrelevant;
 
             return bool.TryParse(
@@ -122,12 +132,17 @@ namespace RES.Configuration
             CheckMissing(prefix, setting);
 
             if (IntSettingAvailableButNotParseable(prefix, propertyName))
-                errors.Add($"The {prefix}{propertyName} setting ('{GetString(prefix + propertyName)}') can not be converted to an int");
+                errors.Add($"The {prefix}{propertyName} setting ('{GetString(prefix, propertyName)}') can not be converted to an int");
         }
 
-        bool IntSettingAvailableButNotParseable(string prefix, string propertyName) =>
-            IsMissing(prefix, propertyName) == false &&
+        bool IntSettingAvailableButNotParseable(string prefix, string propertyName)
+        {
+            Requires(prefix != null);
+            Requires(propertyName != null);
+
+            return IsMissing(prefix, propertyName) == false &&
             CanParseInt(prefix, propertyName) == false;
+        }
 
         public void CheckWithDefault(string prefix, Expression<Func<int>> setting)
         {
@@ -140,6 +155,9 @@ namespace RES.Configuration
 
         bool CanParseInt(string prefix, string propertyName)
         {
+            Requires(prefix != null);
+            Requires(propertyName != null);
+
             int irrelevant;
 
             return int.TryParse(
@@ -167,7 +185,7 @@ namespace RES.Configuration
             CheckMissing(prefix, setting);
 
             if (DoubleSettingAvailableButNotParseable(prefix, propertyName))
-                errors.Add($"The {prefix}{propertyName} setting ('{GetString(prefix + propertyName)}') can not be converted to a double");
+                errors.Add($"The {prefix}{propertyName} setting ('{GetString(prefix, propertyName)}') can not be converted to a double");
         }
 
         public void CheckWithDefault(string prefix, Expression<Func<double>> setting)
@@ -179,18 +197,27 @@ namespace RES.Configuration
                 Check(prefix, setting);
         }
 
-        bool DoubleSettingAvailableButNotParseable(string prefix, string propertyName) =>
-            IsMissing(prefix, propertyName) == false &&
+        bool DoubleSettingAvailableButNotParseable(string prefix, string propertyName)
+        {
+            Requires(prefix != null);
+            Requires(propertyName != null);
+
+            return IsMissing(prefix, propertyName) == false &&
             CanParseDouble(prefix, propertyName) == false;
+        }
 
         bool CanParseDouble(string prefix, string propertyName)
         {
+            Requires(prefix != null);
+            Requires(propertyName != null);
+
             double irrelevant;
 
             return double.TryParse(
                 GetString(prefix + propertyName),
                 out irrelevant);
         }
+
         #endregion
 
         #region Enum settings
@@ -217,17 +244,25 @@ namespace RES.Configuration
             string propertyName = GetProperty(setting).Name;
 
             if (EnumSettingAvailableButNotParseable<T>(prefix, propertyName))
-                errors.Add($"The {prefix}{propertyName} setting ('{GetString(prefix + property.Name)}') can not be converted to a {typeof(T).Name}");
+                errors.Add($"The {prefix}{propertyName} setting ('{GetString(prefix, property.Name)}') can not be converted to a {typeof(T).Name}");
         }
 
         bool EnumSettingAvailableButNotParseable<T>(string prefix, string propertyName)
-            where T : struct, IConvertible =>
-                IsMissing(prefix, propertyName) == false &&
+            where T : struct, IConvertible
+        {
+            Requires(prefix != null);
+            Requires(propertyName != null);
+
+            return IsMissing(prefix, propertyName) == false &&
                 CanParseEnum<T>(prefix, propertyName) == false;
+        }
 
         bool CanParseEnum<T>(string prefix, string propertyName)
             where T : struct, IConvertible
         {
+            Requires(prefix != null);
+            Requires(propertyName != null);
+
             T irrelevant;
 
             return
@@ -256,7 +291,7 @@ namespace RES.Configuration
             CheckMissing(prefix, setting);
 
             if (IntegerListSettingAvailableButNotParseable(prefix, propertyName))
-                errors.Add($"The {prefix}{propertyName} setting ('{GetString(prefix + propertyName)}') can not be converted to an IntegerList");
+                errors.Add($"The {prefix}{propertyName} setting ('{GetString(prefix, propertyName)}') can not be converted to an IntegerList");
         }
 
         public void CheckWithDefault(string prefix, Expression<Func<IEnumerable<int>>> setting)
@@ -268,32 +303,56 @@ namespace RES.Configuration
                 Check(prefix, setting);
         }
 
-        bool IntegerListSettingAvailableButNotParseable(string prefix, string propertyName) =>
-            IsMissing(prefix, propertyName) == false &&
-            CanParseIntegerList(prefix, propertyName) == false;
+        bool IntegerListSettingAvailableButNotParseable(string prefix, string propertyName)
+        {
+            Requires(prefix != null);
+            Requires(propertyName != null);
 
-        bool CanParseIntegerList(string prefix, string propertyName) =>
-            ParseIntegerListFromCsv.CanParse(GetString(prefix + propertyName));
+            return IsMissing(prefix, propertyName) == false &&
+            CanParseIntegerList(prefix, propertyName) == false;
+        }
+
+        bool CanParseIntegerList(string prefix, string propertyName)
+        {
+            Requires(prefix != null);
+            Requires(propertyName != null);
+
+            return ParseIntegerListFromCsv.CanParse(GetString(prefix + propertyName));
+        }
 
         #endregion
 
         #region missing settings
-        void CheckMissing<T>(string prefix, Expression<Func<T>> setting) =>
+        void CheckMissing<T>(string prefix, Expression<Func<T>> setting)
+        {
+            Requires(prefix != null);
+            Requires(setting != null);
+
             CheckMissing(prefix + GetProperty<T>(setting).Name);
+        }
 
         void CheckMissing(string setting)
         {
+            Requires(setting != null);
+
             if (IsMissing(setting))
                 errors.Add(string.Format("The {0} setting is missing", setting));
         }
 
-        bool IsMissing(string prefix, PropertyInfo property) =>
-            string.IsNullOrEmpty(GetString(prefix + property.Name));
+        bool IsMissing(string prefix, PropertyInfo property)
+        {
+            Requires(prefix != null);
+            Requires(property != null);
+
+            return string.IsNullOrEmpty(GetString(prefix + property.Name));
+        }
         #endregion
 
         # region utilities
         static PropertyInfo GetProperty<TValue>(Expression<Func<TValue>> selector)
         {
+            Requires(selector != null);
+
             switch (NodeType(selector))
             {
                 case ExpressionType.MemberAccess:
@@ -303,14 +362,24 @@ namespace RES.Configuration
             }
         }
 
-        static ExpressionType NodeType<TValue>(Expression<Func<TValue>> selector) =>
-            GetBody(selector).NodeType;
+        static ExpressionType NodeType<TValue>(Expression<Func<TValue>> selector)
+        {
+            Requires(selector != null);
 
-        static PropertyInfo MemberExpressionPropertyInfo<TValue>(Expression<Func<TValue>> selector) =>
-            (PropertyInfo)((MemberExpression)GetBody(selector)).Member;
+            return GetBody(selector).NodeType;
+        }
+
+        static PropertyInfo MemberExpressionPropertyInfo<TValue>(Expression<Func<TValue>> selector)
+        {
+            Requires(selector != null);
+
+            return (PropertyInfo)((MemberExpression)GetBody(selector)).Member;
+        }
 
         static Expression GetBody<TValue>(Expression<Func<TValue>> selector)
         {
+            Requires(selector != null);
+
             Expression body = selector;
 
             return (body is LambdaExpression)

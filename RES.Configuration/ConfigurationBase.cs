@@ -14,14 +14,25 @@ namespace RES.Configuration
             this.configurationGetter = configurationGetter;
         }
 
-        protected bool IsMissing(string prefix, string setting) =>
-            IsMissing(prefix + setting);
+        protected bool IsMissing(string prefix, string setting)
+        {
+            Requires(prefix != null);
+            Requires(setting != null);
 
-        protected bool IsMissing(string setting) =>
-            GetStringOrNull(setting) == null;
+            return IsMissing(prefix + setting);
+        }
+
+        protected bool IsMissing(string setting)
+        {
+            Requires(setting != null);
+
+            return GetStringOrNull(setting) == null;
+        }
 
         protected string GetString(string prefix, string setting)
         {
+            Requires(prefix != null);
+            Requires(setting != null);
             Ensures(Result<string>() != null);
 
             return GetString(prefix + setting);
@@ -29,6 +40,7 @@ namespace RES.Configuration
 
         protected string GetString(string setting)
         {
+            Requires(setting != null);
             Ensures(Result<string>() != null);
 
             if (GetStringOrNull(setting) == null)
@@ -39,11 +51,16 @@ namespace RES.Configuration
 
         static void ThrowMissingSetting(string setting)
         {
+            Requires(setting != null);
+
             throw new ConfigurationException($"Configuration Setting '{setting}' not found. It is better to use the Validator to check settings at startup, rather than waiting until they are first used.");
         }
 
-        string GetStringOrNull(string setting) =>
-            configurationGetter.Get(setting);
+        string GetStringOrNull(string setting)
+        {
+            Requires(setting != null);
 
+            return configurationGetter.Get(setting);
+        }
     }
 }
