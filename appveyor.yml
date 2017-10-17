@@ -1,0 +1,19 @@
+environment:
+ myget_nuget_password:
+  secure: mn5+CQ4OEuwGskUxOKqLOtIkTmbUqk7vMfoWxDwxp8c=
+before_build:
+ - nuget restore "RES.Configuration.sln" -verbosity quiet
+after_build:
+ - nuget pack RES.Configuration\RES.Configuration.csproj -prop Configuration=Release -Build -Symbols
+ - nuget push *.nupkg -source https://www.myget.org/F/res/api/v2/package -UserName res -Password %myget_nuget_password% 
+artifacts:
+ - path: artifacts.zip
+notifications:
+  - provider: Email
+    to:
+      - cedd.burge@res-group.com
+      - '{{commitAuthorEmail}}'
+    subject: 'Build {{status}}'
+    on_build_success: false
+    on_build_failure: true
+    on_build_status_changed: false
