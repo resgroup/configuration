@@ -8,7 +8,7 @@ before_build:
 after_build:
  #- nuget pack RES.Configuration\RES.Configuration.csproj -prop Configuration=Release -Build -Symbols
  - msbuild RES.Configuration\RES.Configuration.csproj /t:pack
- - nuget push *.nupkg -Source "https://www.myget.org/F/res/api/v2/package" -ApiKey %myget_api_key%
+ - nuget push BuiltDLLs\Debug\*.nupkg -Source "https://www.myget.org/F/res/api/v2/package" -ApiKey %myget_api_key%
 artifacts:
  - path: artifacts.zip
 notifications:
