@@ -8,7 +8,7 @@ before_build:
 after_build:
  #- nuget pack RES.Configuration\RES.Configuration.csproj -prop Configuration=Release -Build -Symbols
  - msbuild RES.Configuration\RES.Configuration.csproj /t:pack
- - nuget push *.nupkg -source https://www.myget.org/F/res/api/v2/package 
+ - nuget push *.nupkg -source myget 
  #-UserName res -Password %myget_nuget_password% 
 artifacts:
  - path: artifacts.zip
