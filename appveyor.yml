@@ -1,6 +1,7 @@
 environment:
  myget_nuget_password:
   secure: mn5+CQ4OEuwGskUxOKqLOtIkTmbUqk7vMfoWxDwxp8c=
+image: Visual Studio 2017
 before_build:
  - nuget restore "RES.Configuration.sln" -verbosity quiet
 after_build:
