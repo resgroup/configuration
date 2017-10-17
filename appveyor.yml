@@ -4,8 +4,8 @@ environment:
 image: Visual Studio 2017
 before_build:
  - nuget restore "RES.Configuration.sln" -verbosity quiet
-#after_build:
-# - msbuild RES.Configuration\RES.Configuration.csproj /t:pack /p:IncludeSymbols=true
+after_build:
+ - msbuild RES.Configuration\RES.Configuration.csproj /t:pack /p:IncludeSymbols=true
 # - nuget push BuiltDLLs\Debug\*.nupkg -Source "https://www.myget.org/F/res/api/v2/package" -ApiKey %myget_api_key%
 artifacts:
  - path: BuiltDLLs\Debug\*.nupkg 
