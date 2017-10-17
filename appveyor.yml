@@ -4,13 +4,11 @@ environment:
 image: Visual Studio 2017
 before_build:
  - nuget restore "RES.Configuration.sln" -verbosity quiet
- #- nuget sources add -Name "myget" -Source "https://www.myget.org/F/res/api/v2/package" -username "res" -password "%myget_nuget_password%"
 after_build:
- #- nuget pack RES.Configuration\RES.Configuration.csproj -prop Configuration=Release -Build -Symbols
- - msbuild RES.Configuration\RES.Configuration.csproj /t:pack
+ - msbuild RES.Configuration\RES.Configuration.csproj /t:pack /p:IncludeSymbols=true
  - nuget push BuiltDLLs\Debug\*.nupkg -Source "https://www.myget.org/F/res/api/v2/package" -ApiKey %myget_api_key%
 artifacts:
- - path: artifacts.zip
+ - path: BuiltDLLs\Debug\*.nupkg 
 notifications:
   - provider: Email
     to:
