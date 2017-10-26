@@ -10,10 +10,12 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <BaseOutputPath>..\BuiltDLLs\</BaseOutputPath>
+	<ProjectGuid>60a9fe0a-a256-4f43-a3e4-b4686eb17184</ProjectGuid><!-- only required for sonar qube, and only until they fix a .net core type issue https://jira.sonarsource.com/browse/SONARMSBRU-167 -->
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
+    <NoWarn>1701;1702;1705;1125</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="*.cs" />
