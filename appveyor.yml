@@ -14,13 +14,13 @@ build_script:
  - msbuild RES.Configuration\RES.Configuration.csproj /t:pack /p:IncludeSymbols=true
  - SonarQube.Scanner.MSBuild.exe end /d:"sonar.login=a8e51e7eccb2eaa68c5f8d3c50e827ee2a0fa545"
 
-#test_script:
+test_script:
  # test and create coverage report. OpenCover comes in via nuget restore
- #- .\RES.Configuration.Test\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"nunit-console-x86.exe" -targetargs:"RES.Configuration.Test\RES.Configuration.Test.csproj -noshadow" -output:"coverage.xml" -returntargetcode
+ - .\RES.Configuration.Test\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -target:"nunit-console-x86.exe" -targetargs:"RES.Configuration.Test\RES.Configuration.Test.csproj -noshadow" -output:"coverage.xml" -returntargetcode
  # upload the code coverage to codcov.io
- #- "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
- #- pip install codecov
- #- codecov -f "coverage.xml" -t %code_cov_token%
+ - "SET PATH=C:\\Python34;C:\\Python34\\Scripts;%PATH%"
+ - pip install codecov
+ - codecov -f "coverage.xml" -t %code_cov_token%
 artifacts:
  - path: BuiltDLLs\Debug\*.nupkg 
 notifications:
