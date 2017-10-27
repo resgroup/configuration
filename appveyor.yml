@@ -14,7 +14,7 @@ build_script:
  - SonarQube.Scanner.MSBuild.exe begin /k:"res.configuration"  /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.organization=res" /d:"sonar.login=a8e51e7eccb2eaa68c5f8d3c50e827ee2a0fa545" /d:sonar.verbose=false
  - msbuild RES.Configuration\RES.Configuration.csproj /t:pack /p:IncludeSymbols=true /nowarn:1125 /verbosity:quiet
  - msbuild RES.Configuration.Test\RES.Configuration.Test.csproj  /nowarn:1125 /verbosity:quiet
- - SonarQube.Scanner.MSBuild.exe end /d:"sonar.login=a8e51e7eccb2eaa68c5f8d3c50e827ee2a0fa545" /d:sonar.verbose=false 
+ - SonarQube.Scanner.MSBuild.exe end /d:"sonar.login=a8e51e7eccb2eaa68c5f8d3c50e827ee2a0fa545"
 
 test_script:
  # test and create coverage report.
