@@ -26,7 +26,7 @@ namespace RES.Configuration
         {
             Requires(setting != null);
 
-            return GetStringOrNull(setting) != null;
+            return !string.IsNullOrEmpty(GetStringOrNull(setting));
         }
 
         protected string GetString(string prefix, string setting)
