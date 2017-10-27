@@ -335,7 +335,7 @@ namespace RES.Configuration
         {
             Requires(setting != null);
 
-            if (IsAvailable(setting))
+            if (IsAvailable(setting) == false)
                 errors.Add(string.Format("The {0} setting is missing", setting));
         }
 
@@ -344,7 +344,7 @@ namespace RES.Configuration
             Requires(prefix != null);
             Requires(property != null);
 
-            return !string.IsNullOrEmpty(GetString(prefix + property.Name));
+            return string.IsNullOrEmpty(GetString(prefix + property.Name)) == false;
         }
         #endregion
 
