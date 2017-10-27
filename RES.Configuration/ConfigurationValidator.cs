@@ -57,7 +57,7 @@ namespace RES.Configuration
             Requires(prefix != null);
             Requires(setting != null);
 
-            if (IsMissing(prefix, GetProperty(setting)) == false)
+            if (IsAvailable(prefix, GetProperty(setting)))
                 Check(prefix, setting);
         }
 
@@ -88,7 +88,7 @@ namespace RES.Configuration
             Requires(prefix != null);
             Requires(propertyName != null);
 
-            return IsMissing(prefix, propertyName) == false &&
+            return IsAvailable(prefix, propertyName) &&
             CanParseBool(prefix, propertyName) == false;
         }
 
@@ -97,7 +97,7 @@ namespace RES.Configuration
             Requires(prefix != null);
             Requires(setting != null);
 
-            if (IsMissing(prefix, GetProperty(setting)) == false)
+            if (IsAvailable(prefix, GetProperty(setting)))
                 Check(prefix, setting);
         }
 
@@ -140,7 +140,7 @@ namespace RES.Configuration
             Requires(prefix != null);
             Requires(propertyName != null);
 
-            return IsMissing(prefix, propertyName) == false &&
+            return IsAvailable(prefix, propertyName) &&
             CanParseInt(prefix, propertyName) == false;
         }
 
@@ -149,7 +149,7 @@ namespace RES.Configuration
             Requires(prefix != null);
             Requires(setting != null);
 
-            if (IsMissing(prefix, GetProperty(setting)) == false)
+            if (IsAvailable(prefix, GetProperty(setting)))
                 Check(prefix, setting);
         }
 
@@ -193,7 +193,7 @@ namespace RES.Configuration
             Requires(prefix != null);
             Requires(setting != null);
 
-            if (IsMissing(prefix, GetProperty(setting)) == false)
+            if (IsAvailable(prefix, GetProperty(setting)))
                 Check(prefix, setting);
         }
 
@@ -202,7 +202,7 @@ namespace RES.Configuration
             Requires(prefix != null);
             Requires(propertyName != null);
 
-            return IsMissing(prefix, propertyName) == false &&
+            return IsAvailable(prefix, propertyName) &&
             CanParseDouble(prefix, propertyName) == false;
         }
 
@@ -253,7 +253,7 @@ namespace RES.Configuration
             Requires(prefix != null);
             Requires(propertyName != null);
 
-            return IsMissing(prefix, propertyName) == false &&
+            return IsAvailable(prefix, propertyName) &&
                 CanParseEnum<T>(prefix, propertyName) == false;
         }
 
@@ -299,7 +299,7 @@ namespace RES.Configuration
             Requires(prefix != null);
             Requires(setting != null);
 
-            if (IsMissing(prefix, GetProperty(setting)) == false)
+            if (IsAvailable(prefix, GetProperty(setting)))
                 Check(prefix, setting);
         }
 
@@ -308,7 +308,7 @@ namespace RES.Configuration
             Requires(prefix != null);
             Requires(propertyName != null);
 
-            return IsMissing(prefix, propertyName) == false &&
+            return IsAvailable(prefix, propertyName) &&
             CanParseIntegerList(prefix, propertyName) == false;
         }
 
@@ -335,16 +335,16 @@ namespace RES.Configuration
         {
             Requires(setting != null);
 
-            if (IsMissing(setting))
+            if (IsAvailable(setting))
                 errors.Add(string.Format("The {0} setting is missing", setting));
         }
 
-        bool IsMissing(string prefix, PropertyInfo property)
+        bool IsAvailable(string prefix, PropertyInfo property)
         {
             Requires(prefix != null);
             Requires(property != null);
 
-            return string.IsNullOrEmpty(GetString(prefix + property.Name));
+            return !string.IsNullOrEmpty(GetString(prefix + property.Name));
         }
         #endregion
 

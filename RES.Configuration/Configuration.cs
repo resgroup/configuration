@@ -270,7 +270,7 @@ namespace RES.Configuration
         }
 
         bool IsMissing(string prefix, MethodBase method) =>
-            IsMissing(prefix, PropertyName(method));
+            IsAvailable(prefix, PropertyName(method));
 
         #endregion
     }

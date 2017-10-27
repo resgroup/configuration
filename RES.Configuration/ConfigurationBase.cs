@@ -14,15 +14,15 @@ namespace RES.Configuration
             this.configurationGetter = configurationGetter;
         }
 
-        protected bool IsMissing(string prefix, string setting)
+        protected bool IsAvailable(string prefix, string setting)
         {
             Requires(prefix != null);
             Requires(setting != null);
 
-            return IsMissing(prefix + setting);
+            return IsAvailable(prefix + setting);
         }
 
-        protected bool IsMissing(string setting)
+        protected bool IsAvailable(string setting)
         {
             Requires(setting != null);
 
