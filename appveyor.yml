@@ -26,6 +26,7 @@ after_test:
  - codecov -f "coverage.xml" -t %code_cov_token%
 artifacts:
  - path: BuiltDLLs\Debug\*.nupkg 
+ - path: converage.xml
 notifications:
   - provider: Email
     to:
