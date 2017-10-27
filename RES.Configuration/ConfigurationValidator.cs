@@ -10,7 +10,7 @@ namespace RES.Configuration
 {
     // This class is getting quite long. Consider splitting it, probably by having one class for each thing being validated (eg BoolConfigurationValidator etc)
     // Could have a base / helper class that handles keeping a record of the errors (eg list of errors, adderror, anyerrors, errormessages)
-    public class ConfigurationValidator : ConfigurationBase, IDisposable
+    public sealed class ConfigurationValidator : ConfigurationBase, IDisposable
     {
         readonly List<string> errors;
 
