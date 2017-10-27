@@ -61,9 +61,9 @@ namespace RES.Configuration
             Requires(method != null);
 
             return
-                IsMissing(prefix, method)
-                ? defaultValue
-                : GetBool(prefix, method);
+                IsAvailable(prefix, method)
+                ? GetBool(prefix, method)
+                : defaultValue;
         }
         #endregion
 
@@ -96,9 +96,9 @@ namespace RES.Configuration
             Requires(method != null);
 
             return 
-                IsMissing(prefix, method)
-                ? defaultValue
-                : GetInt(prefix, method);
+                IsAvailable(prefix, method)
+                ? GetInt(prefix, method)
+                : defaultValue;
 
         }
         #endregion
@@ -132,9 +132,9 @@ namespace RES.Configuration
             Requires(method != null);
 
             return 
-                IsMissing(prefix, method)
-                ? defaultValue
-                : GetDouble(prefix, method);
+                IsAvailable(prefix, method)
+                ? GetDouble(prefix, method)
+                : defaultValue;
         }
         #endregion
 
@@ -175,9 +175,9 @@ namespace RES.Configuration
             Requires(method != null);
 
             return 
-                IsMissing(prefix, method)
-                ? defaultValue
-                : GetEnum<T>(prefix, method);
+                IsAvailable(prefix, method)
+                ? GetEnum<T>(prefix, method)
+                : defaultValue;
         }
         #endregion
 
@@ -214,9 +214,9 @@ namespace RES.Configuration
             Ensures(Result<IEnumerable<int>>() != null);
 
             return 
-                IsMissing(prefix, method)
-                ? defaultValue
-                : GetIntegerList(prefix, method);
+                IsAvailable(prefix, method)
+                ? GetIntegerList(prefix, method)
+                : defaultValue;
         }
         #endregion
 
@@ -253,9 +253,9 @@ namespace RES.Configuration
             Ensures(Result<string>() != null);
 
             return
-                IsMissing(prefix, method)
-                ? defaultValue
-                : GetString(prefix, method);
+                IsAvailable(prefix, method)
+                ? GetString(prefix, method)
+                : defaultValue;
         }
         #endregion
 
@@ -269,7 +269,7 @@ namespace RES.Configuration
             return method.Name.Replace("get_", "");
         }
 
-        bool IsMissing(string prefix, MethodBase method) =>
+        bool IsAvailable(string prefix, MethodBase method) =>
             IsAvailable(prefix, PropertyName(method));
 
         #endregion

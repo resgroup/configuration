@@ -11,10 +11,10 @@ build_script:
  - nuget restore "RES.Configuration.sln" -verbosity quiet
  #- ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarQube.Scanner.MSBuild.exe begin /k:"res.economic-model"  /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.organization=res" /d:"sonar.login=a8e51e7eccb2eaa68c5f8d3c50e827ee2a0fa545" /d:"sonar.analysis.mode=preview" /d:"sonar.github.pullRequest=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.github.repository=resgroup/economic-model" /d:"sonar.github.oauth=$env:github_token" /d:"sonar.exclusions=**/*Generated*,**/*Generated*/**,**/Base/*Key.cs,**/Base/*FactoryInstance.cs,**/*DataAccessFactory.cs,**/obj/**,**/*Specification*/**/*,**/*.sql,**/*.js,**/*.xml,**/*.ini,**/SpecificationSpecific*, EconomicAssessment/TEST_*,CCD/Scenario*,Property/TEST_*,/*Key.cs,/*Result.cs,tbl*.cs,*Data.cs" }
  #- ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarQube.Scanner.MSBuild.exe begin /k:"res.economic-model"  /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.organization=res" /d:"sonar.login=a8e51e7eccb2eaa68c5f8d3c50e827ee2a0fa545" /d:"sonar.exclusions=**/*Generated*,**/*Generated*/**,**/Base/*Key.cs,**/Base/*FactoryInstance.cs,**/*DataAccessFactory.cs,**/obj/**,**/*Specification*/**/*,**/*.sql,**/*.js,**/*.xml,**/*.ini,**/SpecificationSpecific*, EconomicAssessment/TEST_*,CCD/Scenario*,Property/TEST_*,/*Key.cs,/*Result.cs"}
- - SonarQube.Scanner.MSBuild.exe begin /k:"res.configuration"  /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.organization=res" /d:"sonar.login=a8e51e7eccb2eaa68c5f8d3c50e827ee2a0fa545"
+ - SonarQube.Scanner.MSBuild.exe begin /k:"res.configuration"  /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.organization=res" /d:"sonar.login=a8e51e7eccb2eaa68c5f8d3c50e827ee2a0fa545" /d:sonar.verbose=false
  - msbuild RES.Configuration\RES.Configuration.csproj /t:pack /p:IncludeSymbols=true /nowarn:1125 /verbosity:quiet
  - msbuild RES.Configuration.Test\RES.Configuration.Test.csproj  /nowarn:1125 /verbosity:quiet
- - SonarQube.Scanner.MSBuild.exe end /d:"sonar.login=a8e51e7eccb2eaa68c5f8d3c50e827ee2a0fa545"
+ - SonarQube.Scanner.MSBuild.exe end /d:"sonar.login=a8e51e7eccb2eaa68c5f8d3c50e827ee2a0fa545" /d:sonar.verbose=false 
 
 test_script:
  # test and create coverage report.
