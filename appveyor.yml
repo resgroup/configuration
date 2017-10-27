@@ -3,7 +3,7 @@ environment:
  github_token:
   secure: MkekX4fNuL+MhfZYwE9xv40NFVl2PrRzIapgQVXoHnZb3aVWrgPKnoJ/PneRrLcL 
  code_cov_token:
-    secure: dWsIQqaWCFO4u3mUj2VvnEWu9ZOQwSFZ2QrGg1Y5R9ykGQZRodrvpNutWLnWtMxG  
+    secure: iXZYGk5+JJMkYPYRYhFBRXpG3KN/Q7gkyReh3hZAFYtX1p/885y1ZY6fdD1XzBSU  
 build_script:
  # install sonarqube runner
  - choco install "msbuild-sonarqube-runner" -y 
