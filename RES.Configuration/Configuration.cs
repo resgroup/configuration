@@ -13,7 +13,7 @@ namespace RES.Configuration
     public class Configuration : ConfigurationBase
     {
         public Configuration()
-            : this(new ConfigurationGetter())
+            : this(new GetFromConfigurationManager())
         { }
 
         public Configuration(IConfigurationGetter configurationGetter)

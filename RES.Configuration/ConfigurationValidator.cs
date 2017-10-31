@@ -15,7 +15,7 @@ namespace RES.Configuration
         readonly List<string> errors;
 
         public ConfigurationValidator()
-            : this(new ConfigurationGetter()) { }
+            : this(new GetFromConfigurationManager()) { }
 
         public ConfigurationValidator(IConfigurationGetter configurationGetter)
             : base(configurationGetter)

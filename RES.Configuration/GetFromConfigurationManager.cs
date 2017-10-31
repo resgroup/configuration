@@ -3,7 +3,7 @@ using static System.Diagnostics.Contracts.Contract;
 
 namespace RES.Configuration
 {
-    internal class ConfigurationGetter : IConfigurationGetter
+    internal class ConfigurationManagerConfigurationGetter : IConfigurationGetter
     {
         public string Get(string setting)
         {
