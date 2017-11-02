@@ -397,7 +397,7 @@ namespace RES.Configuration
             Requires(prefix != null);
             Requires(property != null);
 
-            return string.IsNullOrEmpty(GetString(prefix + property.Name)) == false;
+            return IsAvailable(prefix, property.Name);
         }
         #endregion
 
