@@ -22,6 +22,13 @@ namespace RES.Configuration.Test
         }
 
         [Test]
+        public void CheckWithDefaultDoesNothingWhenSettingMissing()
+        {
+            using (var validator = new ConfigurationValidator(NoSettings))
+                validator.CheckWithDefault(() => IntegerProperty);
+        }
+
+        [Test]
         public void CheckDoesNothingWhenSettingWithPrefixAvailable()
         {
             var settings = Setting("UK-IntegerProperty", "983423");

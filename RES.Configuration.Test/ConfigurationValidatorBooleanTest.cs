@@ -22,6 +22,13 @@ namespace RES.Configuration.Test
         }
 
         [Test]
+        public void CheckWithDefaultDoesNothingWhenSettingMissing()
+        {
+            using (var validator = new ConfigurationValidator(NoSettings))
+                validator.CheckWithDefault(() => BooleanProperty);
+        }
+
+        [Test]
         public void CheckDoesNothingWhenSettingWithPrefixAvailable()
         {
             var setting = Setting("UK-BooleanProperty", "false");
