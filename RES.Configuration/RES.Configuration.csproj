@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net40</TargetFramework>
     <Company>RES</Company>
@@ -10,7 +10,7 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <BaseOutputPath>..\BuiltDLLs\</BaseOutputPath>
-	<ProjectGuid>9d23057c-33b9-443b-86de-f5c30289eb42</ProjectGuid><!-- only required for sonar qube, and only until they fix a .net core type issue https://jira.sonarsource.com/browse/SONARMSBRU-167 -->
+	<ProjectGuid>6838e810-4da0-43c3-bca1-51063b610c6b</ProjectGuid><!-- only required for sonar qube, and only until they fix a .net core type issue https://jira.sonarsource.com/browse/SONARMSBRU-167 -->
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>

@@ -29,6 +29,23 @@ namespace RES.Configuration.Test
         }
 
         [Test]
+        public void CheckWithDefaultThrowsExceptionWhenSettingUnParseable()
+        {
+            const string UN_PARSEABLE = "this is not parseable to a double";
+            const string PROPERTY_NAME = "DoubleProperty";
+
+            var settings = Setting(PROPERTY_NAME, UN_PARSEABLE);
+
+            var exception = Assert.Throws<ConfigurationException>(() =>
+            {
+                using (var validator = new ConfigurationValidator(settings))
+                    validator.CheckWithDefault(setting: () => DoubleProperty);
+            });
+
+            Assert.AreEqual($"The {PROPERTY_NAME} setting ('{UN_PARSEABLE}') can not be converted to a double", exception.Message);
+        }
+
+        [Test]
         public void CheckDoesNothingWhenSettingWithPrefixAvailable()
         {
             var settings = Setting("UK-DoubleProperty", "-0.123");
