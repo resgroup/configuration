@@ -22,6 +22,30 @@ namespace RES.Configuration.Test
         }
 
         [Test]
+        public void CheckWithDefaultDoesNothingWhenSettingMissing()
+        {
+            using (var validator = new ConfigurationValidator(NoSettings))
+                validator.CheckWithDefault(() => IntegerProperty);
+        }
+
+        [Test]
+        public void CheckWithDefaultThrowsExceptionWhenSettingUnParseable()
+        {
+            const string UN_PARSEABLE = "this is not parseable to an integer";
+            const string PROPERTY_NAME = "IntegerProperty";
+
+            var setting = Setting(PROPERTY_NAME, UN_PARSEABLE);
+
+            var exception = Assert.Throws<ConfigurationException>(() =>
+            {
+                using (var validator = new ConfigurationValidator(setting))
+                    validator.CheckWithDefault(() => IntegerProperty);
+            });
+
+            Assert.AreEqual($"The {PROPERTY_NAME} setting ('{UN_PARSEABLE}') can not be converted to an int", exception.Message);
+        }
+
+        [Test]
         public void CheckDoesNothingWhenSettingWithPrefixAvailable()
         {
             var settings = Setting("UK-IntegerProperty", "983423");

@@ -22,6 +22,30 @@ namespace RES.Configuration.Test
         }
 
         [Test]
+        public void CheckWithDefaultDoesNothingWhenSettingMissing()
+        {
+            using (var validator = new ConfigurationValidator(NoSettings))
+                validator.CheckWithDefault(() => BooleanProperty);
+        }
+
+        [Test]
+        public void CheckWithDefaultThrowsExceptionWhenSettingUnParseable()
+        {
+            const string UN_PARSEABLE = "this is not parseable to a bool";
+            const string PROPERTY_NAME = "BooleanProperty";
+
+            var setting = Setting(PROPERTY_NAME, UN_PARSEABLE);
+
+            var exception = Assert.Throws<ConfigurationException>(() =>
+            {
+                using (var validator = new ConfigurationValidator(setting))
+                    validator.CheckWithDefault(() => BooleanProperty);
+            });
+
+            Assert.AreEqual($"The {PROPERTY_NAME} setting ('{UN_PARSEABLE}') can not be converted to a boolean", exception.Message);
+        }
+
+        [Test]
         public void CheckDoesNothingWhenSettingWithPrefixAvailable()
         {
             var setting = Setting("UK-BooleanProperty", "false");

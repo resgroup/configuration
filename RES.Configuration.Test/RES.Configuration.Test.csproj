@@ -1,35 +1,41 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net40</TargetFramework>
-    <Company>RES</Company>
-    <Copyright>Copyright © 2017</Copyright>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-    <Version>1.0.0.0</Version>
-    <EnableDefaultItems>false</EnableDefaultItems>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-    <BaseOutputPath>..\BuiltDLLs\</BaseOutputPath>
-	<ProjectGuid>60a9fe0a-a256-4f43-a3e4-b4686eb17184</ProjectGuid><!-- only required for sonar qube, and only until they fix a .net core type issue https://jira.sonarsource.com/browse/SONARMSBRU-167 -->
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-    <NoWarn>1701;1702;1705;1125</NoWarn>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="*.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Moq" Version="4.2.1510.2205" />
-    <PackageReference Include="NUnit" Version="3.8.1" />
-    <PackageReference Include="OpenCover" Version="4.6.519" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Configuration" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RES.Configuration\RES.Configuration.csproj" />
-  </ItemGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net452</TargetFramework>
+        <Company>RES</Company>
+        <Copyright>Copyright © 2017</Copyright>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
+        <Version>1.0.0.0</Version>
+        <EnableDefaultItems>false</EnableDefaultItems>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+        <BaseOutputPath>..\BuiltDLLs\</BaseOutputPath>
+        <ProjectGuid>40b5b4a7-ad9a-4cec-b1cf-059482dfb9ce</ProjectGuid>
+        <!-- only required for sonar qube, and only until they fix a .net core type issue https://jira.sonarsource.com/browse/SONARMSBRU-167 -->
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <WarningsAsErrors />
+        <NoWarn>1701;1702;1705;1125</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="*.cs" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+        <PackageReference Include="Moq" Version="4.2.1510.2205" />
+        <PackageReference Include="NUnit" Version="3.8.1" />
+        <PackageReference Include="OpenCover" Version="4.6.519" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
+    </ItemGroup>
+    <ItemGroup>
+        <Reference Include="System.Configuration" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\RES.Configuration\RES.Configuration.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+    </ItemGroup>
 </Project>
 

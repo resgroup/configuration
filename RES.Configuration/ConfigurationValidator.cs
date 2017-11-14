@@ -52,6 +52,13 @@ namespace RES.Configuration
             CheckMissing(prefix, setting);
         }
 
+        public void CheckWithDefault(Expression<Func<string>> setting)
+        {
+            Requires(setting != null);
+
+            CheckWithDefault("", setting);
+        }
+
         public void CheckWithDefault(string prefix, Expression<Func<string>> setting)
         {
             Requires(prefix != null);
@@ -90,6 +97,13 @@ namespace RES.Configuration
 
             return IsAvailable(prefix, propertyName) &&
             CanParseBool(prefix, propertyName) == false;
+        }
+
+        public void CheckWithDefault(Expression<Func<bool>> setting)
+        {
+            Requires(setting != null);
+
+            CheckWithDefault("", setting);
         }
 
         public void CheckWithDefault(string prefix, Expression<Func<bool>> setting)
@@ -144,6 +158,13 @@ namespace RES.Configuration
             CanParseInt(prefix, propertyName) == false;
         }
 
+        public void CheckWithDefault(Expression<Func<int>> setting)
+        {
+            Requires(setting != null);
+
+            CheckWithDefault("", setting);
+        }
+
         public void CheckWithDefault(string prefix, Expression<Func<int>> setting)
         {
             Requires(prefix != null);
@@ -186,6 +207,13 @@ namespace RES.Configuration
 
             if (DoubleSettingAvailableButNotParseable(prefix, propertyName))
                 errors.Add($"The {prefix}{propertyName} setting ('{GetString(prefix, propertyName)}') can not be converted to a double");
+        }
+
+        public void CheckWithDefault(Expression<Func<double>> setting)
+        {
+            Requires(setting != null);
+
+            CheckWithDefault("", setting);
         }
 
         public void CheckWithDefault(string prefix, Expression<Func<double>> setting)
@@ -247,6 +275,24 @@ namespace RES.Configuration
                 errors.Add($"The {prefix}{propertyName} setting ('{GetString(prefix, property.Name)}') can not be converted to a {typeof(T).Name}");
         }
 
+        public void CheckWithDefault<T>(Expression<Func<T>> setting)
+            where T : struct, IConvertible
+        {
+            Requires(setting != null);
+
+            CheckWithDefault("", setting);
+        }
+
+        public void CheckWithDefault<T>(string prefix, Expression<Func<T>> setting)
+            where T : struct, IConvertible
+        {
+            Requires(prefix != null);
+            Requires(setting != null);
+
+            if (IsAvailable(prefix, GetProperty(setting)))
+                Check(prefix, setting);
+        }
+
         bool EnumSettingAvailableButNotParseable<T>(string prefix, string propertyName)
             where T : struct, IConvertible
         {
@@ -292,6 +338,13 @@ namespace RES.Configuration
 
             if (IntegerListSettingAvailableButNotParseable(prefix, propertyName))
                 errors.Add($"The {prefix}{propertyName} setting ('{GetString(prefix, propertyName)}') can not be converted to an IntegerList");
+        }
+
+        public void CheckWithDefault(Expression<Func<IEnumerable<int>>> setting)
+        {
+            Requires(setting != null);
+
+            CheckWithDefault("", setting);
         }
 
         public void CheckWithDefault(string prefix, Expression<Func<IEnumerable<int>>> setting)
@@ -344,7 +397,7 @@ namespace RES.Configuration
             Requires(prefix != null);
             Requires(property != null);
 
-            return string.IsNullOrEmpty(GetString(prefix + property.Name)) == false;
+            return IsAvailable(prefix, property.Name);
         }
         #endregion
 
