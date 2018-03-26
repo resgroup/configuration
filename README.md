@@ -34,6 +34,6 @@ public class EconomicModelConfiguration, ICurrencyConversionConfiguration, IConc
         configuration.GetEnum<Currency>(MethodBase.GetCurrentMethod());
 
     public double DefaultConcreteCost => 
-        GetDouble(MethodBase.GetCurrentMethod());
+        configuration.GetDouble(MethodBase.GetCurrentMethod());
 }
 ```
