@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net452</TargetFramework>
+        <TargetFramework>net472</TargetFramework>
         <Company>RES</Company>
         <Copyright>Copyright © 2017</Copyright>
         <AssemblyVersion>1.0.0.0</AssemblyVersion>
@@ -29,10 +29,10 @@
         <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
     </ItemGroup>
     <ItemGroup>
-        <Reference Include="System.Configuration" />
+      <ProjectReference Include="..\RES.Configuration\RES.Configuration.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\RES.Configuration\RES.Configuration.csproj" />
+        <Reference Include="System.Configuration" />
     </ItemGroup>
     <ItemGroup>
       <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
