@@ -11,7 +11,7 @@ namespace RES.Configuration.Test
 
         protected IConfigurationGetter Setting(string configurationKey, string configurationValue)
         {
-            var configurationGetter = new Mock<RES.Configuration.IConfigurationGetter>();
+            var configurationGetter = new Mock<IConfigurationGetter>();
             configurationGetter.Setup(m => m.Get(configurationKey)).Returns(configurationValue);
 
             return configurationGetter.Object;
