@@ -4,7 +4,7 @@ using static System.Diagnostics.Contracts.Contract;
 
 namespace RES.Configuration
 {
-    internal class GetFromEnvironment : IConfigurationGetter
+    public class GetFromEnvironment : IConfigurationGetter
     {
         public string Get(string setting)
         {
