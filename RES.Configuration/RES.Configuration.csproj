@@ -4,6 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <BaseOutputPath>..\BuiltDLLs\</BaseOutputPath>
     <Version>2.0.0</Version>
+    <Authors>RES</Authors>
+    <title>RES.Configuration</title>
+    <description>Strongly typed Configuration with validation. Has the following benefits. There are no magic strings, so any misspellings will be caught at compile time. Refactoring tools (eg rename), can be used and guarantee that all instances are updated. All references to an item of configuration can be easily found using Visual Studio. Code is explicit about the configuration it requires, and can define only the subset of the configuration that it needs. Configuration files can be checked to see if they contain all the required information. Configuration logic, such as defaults and conversion is handled centrally. Configuration items are guaranteed to have the same name in the config file and in the code</description>
+    <PackageProjectUrl>https://github.com/resgroup/configuration</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/resgroup/configuration</RepositoryUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/resgroup/configuration/master/LICENSE</PackageLicenseUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/resgroup/configuration/master/RES.Configuration/configuration.png</PackageIconUrl>
+	<PackageReleaseNotes>Version 2.0.0 targets .Net Standard 2.0 and so can be used in .Net Core Projects. A new ConfigurationGetter (GetFromConfiguration) is available to work with the .Net Core configuration system (Microsoft.Extensions.Configuration)</PackageReleaseNotes>
+	<PackageTags>Configuration</PackageTags>
+	<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+	<RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
