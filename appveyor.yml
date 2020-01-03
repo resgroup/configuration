@@ -15,6 +15,7 @@ test_script:
 # code cov token not required for public repos     -t %code_cov_token%
 artifacts:
  - path: BuiltDLLs\Debug\*.nupkg 
+ - path: coverage.xml
 notifications:
   - provider: Email
     to:
