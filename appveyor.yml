@@ -6,7 +6,7 @@ build_script:
  - choco install opencover -y
  - nuget restore "RES.Configuration.sln" -verbosity quiet
  - msbuild RES.Configuration.sln /nowarn:1125 /verbosity:quiet 
- - OpenCover.Console.exe -register:user -target:"nunit3-console.exe" -targetargs:"BuiltDlls\Debug\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode
+ - C:\Users\AppVeyor\AppData\Local\Apps\OpenCover\OpenCover.Console.exe -register:user -target:"nunit3-console.exe" -targetargs:"BuiltDlls\Debug\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode
  - msbuild RES.Configuration\RES.Configuration.csproj /t:pack /p:IncludeSymbols=true /nowarn:1125 /verbosity:quiet
 
 test_script:
