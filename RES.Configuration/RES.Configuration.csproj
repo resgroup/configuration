@@ -9,25 +9,24 @@
     <description>Strongly typed Configuration with validation. Has the following benefits. There are no magic strings, so any misspellings will be caught at compile time. Refactoring tools (eg rename), can be used and guarantee that all instances are updated. All references to an item of configuration can be easily found using Visual Studio. Code is explicit about the configuration it requires, and can define only the subset of the configuration that it needs. Configuration files can be checked to see if they contain all the required information. Configuration logic, such as defaults and conversion is handled centrally. Configuration items are guaranteed to have the same name in the config file and in the code</description>
     <PackageProjectUrl>https://github.com/resgroup/configuration</PackageProjectUrl>
     <RepositoryUrl>https://github.com/resgroup/configuration</RepositoryUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/resgroup/configuration/master/LICENSE</PackageLicenseUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/resgroup/configuration/master/RES.Configuration/configuration.png</PackageIconUrl>
+    <PackageLicense>https://raw.githubusercontent.com/resgroup/configuration/master/LICENSE</PackageLicense>
 	<PackageReleaseNotes>Version 2.0.1 adds SourceLink support, which allows a first class source debugging experience for consumers of this nuget package</PackageReleaseNotes>
 	<PackageTags>Configuration</PackageTags>
 	<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 	<RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup>
     <DebugType>full</DebugType>
+    <PackageIcon>configuration.png</PackageIcon>
     <DebugSymbols>True</DebugSymbols>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-  </PropertyGroup>
+  <ItemGroup>
+    <None Include="configuration.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
