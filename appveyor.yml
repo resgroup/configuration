@@ -1,20 +1,10 @@
-image: Visual Studio 2017
-environment:
- github_token:
-  secure: MkekX4fNuL+MhfZYwE9xv40NFVl2PrRzIapgQVXoHnZb3aVWrgPKnoJ/PneRrLcL
+image: Visual Studio 2019
 build_script:
- # install sonarqube runner
- - choco install "msbuild-sonarqube-runner" -y 
  - choco install opencover -y
- - nuget restore "RES.Configuration.sln" -verbosity quiet
- - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarQube.Scanner.MSBuild.exe begin /k:"res.configuration"  /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.organization=res" /d:sonar.login=a28bf46a29c89a7e5fb29eadd8db4e8a078243c1 /d:sonar.verbose=false /d:"sonar.analysis.mode=preview" /d:"sonar.github.pullRequest=$env:APPVEYOR_PULL_REQUEST_NUMBER" /d:"sonar.github.repository=resgroup/configuration" /d:"sonar.github.oauth=$env:github_token" /d:sonar.cs.opencover.it.reportsPaths=coverage.xml }
- - ps: if (-Not $env:APPVEYOR_PULL_REQUEST_NUMBER) { SonarQube.Scanner.MSBuild.exe begin /k:"res.configuration"  /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.organization=res" /d:sonar.login=a28bf46a29c89a7e5fb29eadd8db4e8a078243c1 /d:sonar.verbose=false /d:sonar.cs.opencover.it.reportsPaths=coverage.xml }
- #- SonarQube.Scanner.MSBuild.exe begin /k:"res.configuration"  /d:"sonar.host.url=https://sonarcloud.io" /d:"sonar.organization=res" /d:"sonar.login=a28bf46a29c89a7e5fb29eadd8db4e8a078243c1" /d:sonar.verbose=false
- - msbuild RES.Configuration.sln /nowarn:1125 /verbosity:quiet # I think SonarQube only analyses the last msbuild output if there are multiple
- # test and create coverage report, this is used by SonarQube so must do it here
- - OpenCover.Console.exe -register:user -target:"nunit3-console.exe" -targetargs:"BuiltDlls\Debug\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode
- - SonarQube.Scanner.MSBuild.exe end /d:"sonar.login=a28bf46a29c89a7e5fb29eadd8db4e8a078243c1"
- - msbuild RES.Configuration\RES.Configuration.csproj /t:pack /p:IncludeSymbols=true /nowarn:1125 /verbosity:quiet
+ - dotnet restore "RES.Configuration.sln"
+ - dotnet build RES.Configuration.sln /nowarn:1125 /verbosity:quiet 
+ - C:\Users\AppVeyor\AppData\Local\Apps\OpenCover\OpenCover.Console.exe -register:Path64 -target:"nunit3-console.exe" -targetargs:"BuiltDlls\Debug\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode
+ - dotnet build RES.Configuration\RES.Configuration.csproj /t:pack /p:IncludeSymbols=true /nowarn:1125 /verbosity:quiet
 
 test_script:
 # upload the code coverage to codcov.io
@@ -25,10 +15,10 @@ test_script:
 # code cov token not required for public repos     -t %code_cov_token%
 artifacts:
  - path: BuiltDLLs\Debug\*.nupkg 
+ - path: coverage.xml
 notifications:
   - provider: Email
     to:
-      - cedd.burge@res-group.com
       - '{{commitAuthorEmail}}'
     subject: 'Build {{status}}'
     on_build_success: false
