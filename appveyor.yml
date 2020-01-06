@@ -3,7 +3,8 @@ build_script:
  - choco install opencover -y
  - dotnet restore "RES.Configuration.sln"
  - dotnet build RES.Configuration.sln /nowarn:1125 /verbosity:quiet 
- - C:\Users\AppVeyor\AppData\Local\Apps\OpenCover\OpenCover.Console.exe -target:"C:\Program Files\dotnet\dotnet.exe" -targetargs:"test \"RES.Configuration.Test\\RES.Configuration.Test.csproj\" --configuration Debug --no-build" -oldStyle -register:user -output:"coverage.xml"
+ - C:\Users\AppVeyor\AppData\Local\Apps\OpenCover\OpenCover.Console.exe -version
+ - C:\Users\AppVeyor\AppData\Local\Apps\OpenCover\OpenCover.Console.exe -target:"dotnet.exe" -targetargs:"test \"RES.Configuration.Test\\RES.Configuration.Test.csproj\"" -register:user -output:"coverage.xml"
  - dotnet build RES.Configuration\RES.Configuration.csproj /t:pack /p:IncludeSymbols=true /nowarn:1125 /verbosity:quiet
 
 test_script:
