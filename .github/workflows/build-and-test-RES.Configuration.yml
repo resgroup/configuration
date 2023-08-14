@@ -41,7 +41,7 @@ jobs:
 
       - name: Run OpenCover
         run: |
-          C:\ProgramData\chocolatey\lib\opencover.portable\tools\\OpenCover.Console.exe -target:"C:\Program Files\dotnet\dotnet.exe" -targetargs:"BuiltDlls\Release\RES.Configuration.Test.dll --configuration Debug --no-build" -oldStyle -register:user -output:"coverage.xml"
+          C:\ProgramData\chocolatey\lib\opencover.portable\tools\\OpenCover.Console.exe -register:Path64 -target:"nunit3-console.exe" -targetargs:"BuiltDlls\Debug\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode
         shell: cmd
 
       - name: Show contents of RES.Configuration.Test folder
