@@ -55,3 +55,14 @@ jobs:
           path: |
             TestResult.xml
             coverage.xml
+
+      - name: Create nuget package
+        run: |
+          dotnet pack RES.Configuration/RES.Configuration.csproj --configuration Release --no-restore --no-build --output ${GITHUB_WORKSPACE}/artifacts
+
+      - name: Upload nuget package to Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: RES.Configuration
+          path: |
+            artifacts/*.nupkg
