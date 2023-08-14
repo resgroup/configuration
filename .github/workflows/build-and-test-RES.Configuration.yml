@@ -1,0 +1,49 @@
+name: Build And Test RES.Configuration
+
+on:
+  push:
+    branches:
+      - "master"
+    paths-ignore:
+      - '**.md'
+  pull_request:
+  workflow_dispatch:
+    
+jobs:
+  Build_And_Test:
+    name: Build
+    runs-on: windows-2019
+
+    steps:
+      - name: Checkout PR merged with Master
+        uses: actions/checkout@v3
+        if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
+        with:
+          ref: refs/pull/${{ github.event.number }}/merge
+      
+      - name: Checkout Master
+        uses: actions/checkout@v3
+        if: github.event_name != 'pull_request' && github.event_name != 'pull_request_target'
+
+      - name: Use .NET Core SDK 5.x
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Install OpenCover
+        run: choco install opencover.portable
+
+      - name: Restore RES.Configuration
+        run: dotnet restore RES.Configuration.sln
+
+      - name: Build RES.Configuration
+        run: dotnet build RES.Configuration.sln --configuration Release --no-restore
+
+      - name: Run OpenCover
+        run: |
+          C:\ProgramData\chocolatey\lib\opencover.portable\tools\\OpenCover.Console.exe -target:"C:\Program Files\dotnet\dotnet.exe" -targetargs:"test RES.Configuration.Test\RES.Configuration.Test.csproj --configuration Debug --no-build" -oldStyle -register:user -output:"coverage.xml"
+        shell: cmd
+
+      - name: Show contents of RES.Configuration.Test folder
+        shell: cmd
+        run: dir RES.Configuration.Test /s
