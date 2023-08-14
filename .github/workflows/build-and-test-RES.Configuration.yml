@@ -58,7 +58,7 @@ jobs:
 
       - name: Create nuget package
         run: |
-          dotnet pack RES.Configuration/RES.Configuration.csproj --configuration Release --no-restore --no-build --output ${GITHUB_WORKSPACE}/artifacts
+          dotnet pack RES.Configuration/RES.Configuration.csproj --configuration Release --no-restore --no-build --output ${{ github.workspace }}/artifacts
 
       - name: Upload nuget package to Artifacts
         uses: actions/upload-artifact@v3
