@@ -37,11 +37,6 @@ jobs:
         run: |
           msiexec /i D:\a\configuration\configuration\NUnit.Console-3.15.4.msi /qn /norestart
 
-      - name: Display location of nunit3-console.exe
-        shell: cmd
-        run: |
-          dir "C:\Program Files (x86)\NUnit.org" /s
-
       - name: Restore RES.Configuration
         run: dotnet restore RES.Configuration.sln
 
@@ -53,8 +48,10 @@ jobs:
           C:\ProgramData\chocolatey\lib\opencover.portable\tools\\OpenCover.Console.exe -register:Path64 -target:"C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" -targetargs:"${{ github.workspace }}\BuiltDlls\Release\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode
         shell: cmd
 
-      - name: Show contents of RES.Configuration.Test folder
-        shell: cmd
-        run: |
-          dir
-          dir RES.Configuration.Test /s
+      - name: Upload Test and Coverage Reports to Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-and-coverage-results
+          path: |
+            TestResult.xml
+            coverage.xml
