@@ -55,4 +55,6 @@ jobs:
 
       - name: Show contents of RES.Configuration.Test folder
         shell: cmd
-        run: dir RES.Configuration.Test /s
+        run: |
+          dir
+          dir RES.Configuration.Test /s
