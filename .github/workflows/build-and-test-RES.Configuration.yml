@@ -50,7 +50,7 @@ jobs:
 
       - name: Run OpenCover
         run: |
-          C:\ProgramData\chocolatey\lib\opencover.portable\tools\\OpenCover.Console.exe -register:Path64 -target:"C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" -targetargs:"BuiltDlls\Debug\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode
+          C:\ProgramData\chocolatey\lib\opencover.portable\tools\\OpenCover.Console.exe -register:Path64 -target:"C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" -targetargs:"${{ github.workspace }}\BuiltDlls\Release\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode
         shell: cmd
 
       - name: Show contents of RES.Configuration.Test folder
