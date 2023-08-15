@@ -49,6 +49,17 @@ jobs:
           C:\ProgramData\chocolatey\lib\opencover.portable\tools\OpenCover.Console.exe -register:Path64 -target:"C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" -targetargs:"${{ github.workspace }}\BuiltDlls\Release\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode -oldStyle -register:user
         # C:\ProgramData\chocolatey\lib\opencover.portable\tools\\OpenCover.Console.exe -register:Path64 -target:"C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" -targetargs:"${{ github.workspace }}\BuiltDlls\Release\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode -filter:"+[RES.Configuration]* -[RES.Configuration.Test]*" -oldStyle -register:user
 
+      - name: Use ReportGenerator to Convert Code Coverage Results to Markdown Format and Create Badge(s)
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.12
+        with:
+          reports: ${{ github.workspace }}\artifacts\coverage.xml
+          targetdir: ${{ github.workspace }}\artifacts
+          reporttypes: MarkdownSummary
+
+      - name: List folder contents
+        run: |
+          dir ${{ github.workspace }}\artifacts
+
       - name: Upload Test and Coverage Reports to Artifacts
         uses: actions/upload-artifact@v3
         with:
