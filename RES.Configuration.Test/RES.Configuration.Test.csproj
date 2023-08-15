@@ -13,6 +13,7 @@
         <ProjectGuid>40b5b4a7-ad9a-4cec-b1cf-059482dfb9ce</ProjectGuid>
     </PropertyGroup>
     <PropertyGroup>
+        <DebugType>full</DebugType>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <DebugSymbols>True</DebugSymbols>
         <WarningsAsErrors />
