@@ -52,13 +52,13 @@ jobs:
       - name: Use ReportGenerator to Convert Code Coverage Results to Markdown Format and Create Badge(s)
         uses: danielpalme/ReportGenerator-GitHub-Action@5.1.12
         with:
-          reports: ${{ github.workspace }}\artifacts\coverage.xml
-          targetdir: ${{ github.workspace }}\artifacts
+          reports: coverage.xml
+          targetdir: ${{ github.workspace }}
           reporttypes: MarkdownSummary
 
       - name: List folder contents
         run: |
-          dir ${{ github.workspace }}\artifacts
+          dir ${{ github.workspace }}
 
       - name: Upload Test and Coverage Reports to Artifacts
         uses: actions/upload-artifact@v3
@@ -67,6 +67,7 @@ jobs:
           path: |
             TestResult.xml
             coverage.xml
+            Summary.md
 
       - name: Create nuget package
         run: |
