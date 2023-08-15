@@ -44,9 +44,10 @@ jobs:
         run: dotnet build RES.Configuration.sln --configuration Release --no-restore
 
       - name: Run OpenCover
-        run: |
-          C:\ProgramData\chocolatey\lib\opencover.portable\tools\\OpenCover.Console.exe -register:Path64 -target:"C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" -targetargs:"${{ github.workspace }}\BuiltDlls\Release\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode -filter:"+[RES.Configuration]* -[RES.Configuration.Test]*" -oldStyle -register:user
         shell: cmd
+        run: |
+          C:\ProgramData\chocolatey\lib\opencover.portable\tools\\OpenCover.Console.exe -register:Path64 -target:"C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" -targetargs:"${{ github.workspace }}\BuiltDlls\Release\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode -filter:"+[RES.Configuration.Test]*" -oldStyle -register:user
+        # C:\ProgramData\chocolatey\lib\opencover.portable\tools\\OpenCover.Console.exe -register:Path64 -target:"C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" -targetargs:"${{ github.workspace }}\BuiltDlls\Release\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode -filter:"+[RES.Configuration]* -[RES.Configuration.Test]*" -oldStyle -register:user
 
       - name: Upload Test and Coverage Reports to Artifacts
         uses: actions/upload-artifact@v3
