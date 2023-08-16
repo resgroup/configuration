@@ -113,19 +113,19 @@ jobs:
           echo "percent=$percent" >> $GITHUB_OUTPUT
  
       - name: Make Test Results and Code Coverage Badges
-        shell: bash
+        shell: pwsh
         run: |
           npm install -g badge-maker
           badge "tests" ${{ steps.get_test_results.outputs.passed }}/${{ steps.get_test_results.outputs.total_tests }} "#4c1" "#555" > ${{ env.APP_NAME }}-test-badge.svg
-          if [ ${{ steps.get_coverage.outputs.percent }} -ge 80 ]; then
-            color="#4c1"
-          elif [ ${{ steps.get_coverage.outputs.percent }} -ge 50 ]; then
-            color="#dfb317"
-          elif [ ${{ steps.get_coverage.outputs.percent }} -ge 20 ]; then
-            color="#fe7d37"
-          else
-            color="#f00"
-          fi
+          if (${{ steps.get_coverage.outputs.percent }} -ge 80) {
+            $color="#4c1"
+          }elseif(${{ steps.get_coverage.outputs.percent }} -ge 50) {
+            $color="#dfb317"
+          }elseif(${{ steps.get_coverage.outputs.percent }} -ge 20) {
+            $color="#fe7d37"
+          }else{
+            $color="#f00"
+          }
           badge "code coverage" "${{steps.get_coverage.outputs.percent}}%" "$color" "#555" > ${{ env.APP_NAME }}-coverage-badge.svg
   
       - name: Upload Test and Coverage Reports and Badges to Artifacts
