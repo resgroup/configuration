@@ -11,6 +11,7 @@ on:
 
 env:
   APP_NAME: RES.Configuration
+  REPO_NAME: configuration
     
 jobs:
   Build_And_Test:
@@ -159,7 +160,7 @@ jobs:
       - name: Checkout Repo Wiki
         uses: actions/checkout@v3
         with: 
-          repository: resgroup/${{ env.APP_NAME }}.wiki
+          repository: resgroup/${{ env.REPO_NAME }}.wiki
 
       - name: Check If There is Existing Test Report
         id: check_files
