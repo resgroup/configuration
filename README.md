@@ -2,9 +2,7 @@
 
 A C# library for strongly typed Configuration with validation. Please see [Taming Configuration in C#](https://medium.com/hackernoon/taming-configuration-in-c-a2706b2d4741) for more details.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/oujy1v19iwdba8e5?svg=true)](https://ci.appveyor.com/project/RESSoftwareTeam/configuration)
-
-[![codecov](https://codecov.io/gh/resgroup/configuration/branch/master/graph/badge.svg)](https://codecov.io/gh/resgroup/configuration)
+[![](https://github.com/resgroup/configuration/actions/workflows/build-and-test-RES.Configuration.yml/badge.svg)](https://github.com/resgroup/configuration/actions/workflows/build-and-test-RES.Configuration.yml) [![](https://github.com/resgroup/configuration/wiki/RES.Configuration-test-badge.svg)](https://github.com/resgroup/configuration/wiki/RES.Configuration-test-results) [![](https://github.com/resgroup/configuration/wiki/RES.Configuration-coverage-badge.svg)](https://github.com/resgroup/configuration/wiki/RES.Configuration-coverage-results)
 
 Example Usage (`Configuration` is the class provided by this repo)
 

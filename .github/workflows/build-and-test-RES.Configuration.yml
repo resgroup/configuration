@@ -1,0 +1,204 @@
+name: Build And Test RES.Configuration
+
+on:
+  push:
+    branches:
+      - "master"
+    paths-ignore:
+      - '**.md'
+  pull_request:
+  workflow_dispatch:
+
+env:
+  APP_NAME: RES.Configuration
+  REPO_NAME: configuration
+    
+jobs:
+  Build_And_Test:
+    name: Build And Test
+    runs-on: windows-2019
+
+    steps:
+      - name: Checkout PR merged with Master
+        uses: actions/checkout@v3
+        if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
+        with:
+          ref: refs/pull/${{ github.event.number }}/merge
+      
+      - name: Checkout Master
+        uses: actions/checkout@v3
+        if: github.event_name != 'pull_request' && github.event_name != 'pull_request_target'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3 # Needed for making badges
+        with:
+          node-version: '20.x'
+        
+      - name: Install Dependencies # Needed for making badges
+        run: |
+          npm install badge-maker
+
+      - name: Use .NET Core SDK 5.x
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Install OpenCover
+        run: choco install opencover.portable
+
+      - name: Install nunit-console
+        run: |
+          msiexec /i D:\a\configuration\configuration\NUnit.Console-3.15.4.msi /qn /norestart
+
+      - name: Restore RES.Configuration
+        run: dotnet restore RES.Configuration.sln
+
+      - name: Build RES.Configuration
+        run: dotnet build RES.Configuration.sln --configuration Release --no-restore
+
+      - name: Run OpenCover
+        shell: cmd
+        run: |
+          C:\ProgramData\chocolatey\lib\opencover.portable\tools\OpenCover.Console.exe -register:Path64 -target:"C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" -targetargs:"${{ github.workspace }}\BuiltDlls\Release\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode -filter:"+[RES.Configuration.Test]*" -oldStyle -register:user
+        # C:\ProgramData\chocolatey\lib\opencover.portable\tools\\OpenCover.Console.exe -register:Path64 -target:"C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" -targetargs:"${{ github.workspace }}\BuiltDlls\Release\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode -filter:"+[RES.Configuration]* -[RES.Configuration.Test]*" -oldStyle -register:user
+
+      - name: Create Test Result Summary in Markdown Format
+        id: get_test_results
+        shell: pwsh
+        run: |
+          $XMLPath = 'TestResult.xml'
+          $xml = [xml](Get-Content $XMLPath)
+          $test_run = $xml.SelectNodes('//test-run')
+          $total_tests = $test_run.total
+          $passed = $test_run.passed
+          $failed = $test_run.failed
+          $warnings = $test_run.warnings
+          $inconclusive = $test_run.inconclusive
+          $skipped = $test_run.skipped
+          $duration = $test_run.duration
+          $duration = [Math]::Round($duration, 2, [MidpointRounding]::ToEven)
+
+          echo "passed=$passed" >> $env:GITHUB_OUTPUT
+          echo "total_tests=$total_tests" >> $env:GITHUB_OUTPUT
+
+          '# Test Report<br>' | Out-File '${{ env.APP_NAME }}-test-results.md'
+          '## Summary<br>'| Out-File '${{ env.APP_NAME }}-test-results.md' -Append
+          $total_tests + ' tests ran in ' + $duration + ' seconds.<br>' | Out-File '${{ env.APP_NAME }}-test-results.md' -Append
+          '- ' + $passed + ' tests passed<br>' | Out-File '${{ env.APP_NAME }}-test-results.md' -Append
+          '- ' + $failed + ' tests failed<br>' | Out-File '${{ env.APP_NAME }}-test-results.md' -Append
+          '- ' + $skipped + ' tests skipped<br>' | Out-File '${{ env.APP_NAME }}-test-results.md' -Append
+
+      - name: Use ReportGenerator to Convert Code Coverage Results to Markdown Format
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.12
+        with:
+          reports: coverage.xml
+          targetdir: ${{ github.workspace }}
+          reporttypes: MarkdownSummary
+
+      - name: Write Test and Coverage Results to Job Summary
+        shell: bash
+        run: |
+          mv Summary.md ${{ env.APP_NAME }}-coverage-results.md
+          cat ${{ env.APP_NAME }}-test-results.md >> $GITHUB_STEP_SUMMARY
+          cat ${{ env.APP_NAME }}-coverage-results.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Extract code coverage %
+        id: get_coverage
+        shell: bash
+        run: |
+          coverage=`grep -o '**Line coverage:**[^"]*' ${{ env.APP_NAME }}-coverage-results.md`
+          echo $coverage
+          numbers=$(echo $coverage | tr -cd '[. [:digit:]]')
+          percent=$(echo $numbers  | cut -f1 -d' ')
+          echo "percent=$percent" >> $GITHUB_OUTPUT
+ 
+      - name: Make Test Results and Code Coverage Badges
+        shell: pwsh
+        run: |
+          npm install -g badge-maker
+          badge "tests" ${{ steps.get_test_results.outputs.passed }}/${{ steps.get_test_results.outputs.total_tests }} "#4c1" "#555" > ${{ env.APP_NAME }}-test-badge.svg
+          if (${{ steps.get_coverage.outputs.percent }} -ge 80) {
+            $color="#4c1"
+          }elseif(${{ steps.get_coverage.outputs.percent }} -ge 50) {
+            $color="#dfb317"
+          }elseif(${{ steps.get_coverage.outputs.percent }} -ge 20) {
+            $color="#fe7d37"
+          }else{
+            $color="#f00"
+          }
+          badge "code coverage" "${{steps.get_coverage.outputs.percent}}%" "$color" "#555" > ${{ env.APP_NAME }}-coverage-badge.svg
+  
+      - name: Upload Test and Coverage Reports and Badges to Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: reports-and-badges
+          path: |
+            ${{ env.APP_NAME }}-test-results.md
+            ${{ env.APP_NAME }}-coverage-results.md
+            ${{ env.APP_NAME }}-test-badge.svg
+            ${{ env.APP_NAME }}-coverage-badge.svg
+
+      - name: Create nuget package
+        run: |
+          dotnet pack RES.Configuration/RES.Configuration.csproj --configuration Release --no-restore --no-build --output ${{ github.workspace }}/artifacts
+
+      - name: Upload nuget package to Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: RES.Configuration
+          path: |
+            artifacts/*.nupkg
+
+  Upload_Reports_And_Badges_To_Repo_Wiki:
+    name: Upload Test and Code Coverage Reports and Badges to Repo Wiki
+    runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    needs: [ Build_And_Test ]
+
+    steps:
+
+      - name: Checkout Repo Wiki
+        uses: actions/checkout@v3
+        with: 
+          repository: resgroup/${{ env.REPO_NAME }}.wiki
+
+      - name: Check If There is Existing Test Report
+        id: check_files
+        uses: andstor/file-existence-action@v2
+        with:
+          files: |
+            ${{ env.APP_NAME }}-test-results.md
+            ${{ env.APP_NAME }}-test-badge.svg
+            ${{ env.APP_NAME }}-coverage-results.md
+            ${{ env.APP_NAME }}-coverage-badge.svg
+  
+      - name: If There are Existing Test Results and Badges, Delete Them and Sync Back With Wiki
+        if: steps.check_files.outputs.files_exists == 'true'
+        run: |
+          rm -f ${{ env.APP_NAME }}-test-results.md, ${{ env.APP_NAME }}-test-badge.svg, ${{ env.APP_NAME }}-coverage-results.md, ${{ env.APP_NAME }}-coverage-badge.svg
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "Add changes"
+          git push
+    
+      - name: Download New Test and Coverage Reports and Badges From Artifacts
+        if: success() || failure()
+        uses: actions/download-artifact@v3
+        with:
+          path: ./
+          name: reports-and-badges
+  
+      - name: Commit Changes (New Test and Coverage Reports and Badges) Back to Repo Wiki
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "Add changes"
+          git push
+
+      - name: Delete "reports-and-badges" from Artifacts - no longer needed
+        uses: GeekyEggo/delete-artifact@v2.0.0
+        with:
+          name: |
+            reports-and-badges
