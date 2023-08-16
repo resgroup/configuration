@@ -28,6 +28,15 @@ jobs:
         uses: actions/checkout@v3
         if: github.event_name != 'pull_request' && github.event_name != 'pull_request_target'
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3 # Needed for making badges
+        with:
+          node-version: '20.x'
+        
+      - name: Install Dependencies # Needed for making badges
+        run: |
+          npm install badge-maker
+
       - name: Use .NET Core SDK 5.x
         uses: actions/setup-dotnet@v3
         with:
@@ -53,7 +62,7 @@ jobs:
         # C:\ProgramData\chocolatey\lib\opencover.portable\tools\\OpenCover.Console.exe -register:Path64 -target:"C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" -targetargs:"${{ github.workspace }}\BuiltDlls\Release\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode -filter:"+[RES.Configuration]* -[RES.Configuration.Test]*" -oldStyle -register:user
 
       - name: Create Test Result Summary in Markdown Format
-        id: test_result
+        id: get_test_results
         shell: pwsh
         run: |
           $XMLPath = 'TestResult.xml'
@@ -88,12 +97,12 @@ jobs:
       - name: Write Test and Coverage Results to Job Summary
         shell: bash
         run: |
-          mv Summary.md ${{ env.APP_NAME }}-coverage-results-windows.md
+          mv Summary.md ${{ env.APP_NAME }}-coverage-results.md
           cat ${{ env.APP_NAME }}-test-results.md >> $GITHUB_STEP_SUMMARY
           cat ${{ env.APP_NAME }}-coverage-results.md >> $GITHUB_STEP_SUMMARY
 
       - name: Extract code coverage %
-        id: code_coverage
+        id: get_coverage
         shell: bash
         run: |
           coverage=`grep -o '**Line coverage:**[^"]*' ${{ env.APP_NAME }}-coverage-results.md`
@@ -101,14 +110,32 @@ jobs:
           numbers=$(echo $coverage | tr -cd '[. [:digit:]]')
           percent=$(echo $numbers  | cut -f1 -d' ')
           echo "percent=$percent" >> $GITHUB_OUTPUT
+ 
+      - name: Make Test Results and Code Coverage Badges
+        shell: bash
+        run: |
+          npm install -g badge-maker
+          badge "tests" ${{ steps.get_test_results.outputs.passed }}/${{ steps.get_test_results.outputs.total_tests }} "#4c1" "#555" > ${{ env.APP_NAME }}-test-badge.svg
+          if [ ${{ steps.get_coverage.outputs.percent }} -ge 80 ]; then
+            color="#4c1"
+          elif [ ${{ steps.get_coverage.outputs.percent }} -ge 50 ]; then
+            color="#dfb317"
+          elif [ ${{ steps.get_coverage.outputs.percent }} -ge 20 ]; then
+            color="#fe7d37"
+          else
+            color="#f00"
+          fi
+          badge "code coverage" "${{steps.get_coverage.outputs.percent}}%" "$color" "#555" > ${{ env.APP_NAME }}-coverage-badge.svg
   
-      - name: Upload Test and Coverage Reports to Artifacts
+      - name: Upload Test and Coverage Reports and Badges to Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: test-and-coverage-results
+          name: reports-and-badges
           path: |
             ${{ env.APP_NAME }}-test-results.md
             ${{ env.APP_NAME }}-coverage-results.md
+            ${{ env.APP_NAME }}-test-badge.svg
+            ${{ env.APP_NAME }}-coverage-badge.svg
 
       - name: Create nuget package
         run: |
@@ -120,3 +147,57 @@ jobs:
           name: RES.Configuration
           path: |
             artifacts/*.nupkg
+
+  Upload_Reports_And_Badges_To_Repo_Wiki:
+    name: Upload Test and Code Coverage Reports and Badges to Repo Wiki
+    runs-on: ubuntu-latest
+    if: ${{ github.actor != 'dependabot[bot]' }}
+    needs: [ Build_And_Test ]
+
+    steps:
+
+      - name: Checkout Repo Wiki
+        uses: actions/checkout@v3
+        with: 
+          repository: resgroup/${{ env.APP_NAME }}.wiki
+
+      - name: Check If There is Existing Test Report
+        id: check_files
+        uses: andstor/file-existence-action@v2
+        with:
+          files: |
+            ${{ env.APP_NAME }}-test-results.md
+            ${{ env.APP_NAME }}-test-badge.svg
+            ${{ env.APP_NAME }}-coverage-results.md
+            ${{ env.APP_NAME }}-coverage-badge.svg
+  
+      - name: If There are Existing Test Results and Badges, Delete Them and Sync Back With Wiki
+        if: steps.check_files.outputs.files_exists == 'true'
+        run: |
+          rm -f ${{ env.APP_NAME }}-test-results.md, ${{ env.APP_NAME }}-test-badge.svg, ${{ env.APP_NAME }}-coverage-results.md, ${{ env.APP_NAME }}-coverage-badge.svg
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "Add changes"
+          git push
+    
+      - name: Download New Test and Coverage Reports and Badges From Artifacts
+        if: success() || failure()
+        uses: actions/download-artifact@v3
+        with:
+          path: ./
+          name: reports-and-badges
+  
+      - name: Commit Changes (New Test and Coverage Reports and Badges) Back to Repo Wiki
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add .
+          git commit -m "Add changes"
+          git push
+
+      - name: Delete "reports-and-badges" from Artifacts - no longer needed
+        uses: GeekyEggo/delete-artifact@v2.0.0
+        with:
+          name: |
+            reports-and-badges
