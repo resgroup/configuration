@@ -100,8 +100,8 @@ jobs:
         run: |
           mv Summary.md ${{ env.APP_NAME }}-coverage-results.md
           cat ${{ env.APP_NAME }}-test-results.md >> $GITHUB_STEP_SUMMARY
-          echo "<br>" >> $GITHUB_STEP_SUMMARY
-          echo "# Code Coverage Report" >> $GITHUB_STEP_SUMMARY
+          echo " <br> " >> $GITHUB_STEP_SUMMARY
+          echo "# Code Coverage Report <br> " >> $GITHUB_STEP_SUMMARY
           cat ${{ env.APP_NAME }}-coverage-results.md >> $GITHUB_STEP_SUMMARY
 
       - name: Extract code coverage %
