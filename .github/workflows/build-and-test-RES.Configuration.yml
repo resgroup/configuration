@@ -8,10 +8,13 @@ on:
       - '**.md'
   pull_request:
   workflow_dispatch:
+
+env:
+  APP_NAME: RES.Configuration
     
 jobs:
   Build_And_Test:
-    name: Build
+    name: Build And Test
     runs-on: windows-2019
 
     steps:
@@ -49,25 +52,63 @@ jobs:
           C:\ProgramData\chocolatey\lib\opencover.portable\tools\OpenCover.Console.exe -register:Path64 -target:"C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" -targetargs:"${{ github.workspace }}\BuiltDlls\Release\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode -filter:"+[RES.Configuration.Test]*" -oldStyle -register:user
         # C:\ProgramData\chocolatey\lib\opencover.portable\tools\\OpenCover.Console.exe -register:Path64 -target:"C:\Program Files (x86)\NUnit.org\nunit-console\nunit3-console.exe" -targetargs:"${{ github.workspace }}\BuiltDlls\Release\RES.Configuration.Test.dll" -output:"coverage.xml" -returntargetcode -filter:"+[RES.Configuration]* -[RES.Configuration.Test]*" -oldStyle -register:user
 
-      - name: Use ReportGenerator to Convert Code Coverage Results to Markdown Format and Create Badge(s)
+      - name: Create Test Result Summary in Markdown Format
+        id: test_result
+        shell: pwsh
+        run: |
+          $XMLPath = 'TestResult.xml'
+          $xml = [xml](Get-Content $XMLPath)
+          $test_run = $xml.SelectNodes('//test-run')
+          $total_tests = $test_run.total
+          $passed = $test_run.passed
+          $failed = $test_run.failed
+          $warnings = $test_run.warnings
+          $inconclusive = $test_run.inconclusive
+          $skipped = $test_run.skipped
+          $duration = $test_run.duration
+          $duration = [Math]::Round($duration, 2, [MidpointRounding]::ToEven)
+
+          echo "passed=$passed" >> $env:GITHUB_OUTPUT
+          echo "total_tests=$total_tests" >> $env:GITHUB_OUTPUT
+
+          '# Test Report<br>' | Out-File '${{ env.APP_NAME }}-test-results.md'
+          '## Summary<br>'| Out-File '${{ env.APP_NAME }}-test-results.md' -Append
+          $total_tests + ' tests ran in ' + $duration + ' seconds.<br>' | Out-File '${{ env.APP_NAME }}-test-results.md' -Append
+          '- ' + $passed + ' tests passed<br>' | Out-File '${{ env.APP_NAME }}-test-results.md' -Append
+          '- ' + $failed + ' tests failed<br>' | Out-File '${{ env.APP_NAME }}-test-results.md' -Append
+          '- ' + $skipped + ' tests skipped<br>' | Out-File '${{ env.APP_NAME }}-test-results.md' -Append
+
+      - name: Use ReportGenerator to Convert Code Coverage Results to Markdown Format
         uses: danielpalme/ReportGenerator-GitHub-Action@5.1.12
         with:
           reports: coverage.xml
           targetdir: ${{ github.workspace }}
           reporttypes: MarkdownSummary
 
-      - name: List folder contents
+      - name: Write Test and Coverage Results to Job Summary
+        shell: bash
         run: |
-          dir ${{ github.workspace }}
+          mv Summary.md ${{ env.APP_NAME }}-coverage-results-windows.md
+          cat ${{ env.APP_NAME }}-test-results.md >> $GITHUB_STEP_SUMMARY
+          cat ${{ env.APP_NAME }}-coverage-results.md >> $GITHUB_STEP_SUMMARY
 
+      - name: Extract code coverage %
+        id: code_coverage
+        shell: bash
+        run: |
+          coverage=`grep -o '**Line coverage:**[^"]*' ${{ env.APP_NAME }}-coverage-results.md`
+          echo $coverage
+          numbers=$(echo $coverage | tr -cd '[. [:digit:]]')
+          percent=$(echo $numbers  | cut -f1 -d' ')
+          echo "percent=$percent" >> $GITHUB_OUTPUT
+  
       - name: Upload Test and Coverage Reports to Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: test-and-coverage-results
           path: |
-            TestResult.xml
-            coverage.xml
-            Summary.md
+            ${{ env.APP_NAME }}-test-results.md
+            ${{ env.APP_NAME }}-coverage-results.md
 
       - name: Create nuget package
         run: |
