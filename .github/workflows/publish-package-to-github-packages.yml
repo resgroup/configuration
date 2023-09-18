@@ -1,0 +1,61 @@
+name: Publish RES.Configuration To GitHub Packages
+
+on:
+  push:
+    branches:
+      - "master"
+    paths-ignore:
+      - '**.md'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  Build_And_Test:
+    name: Build
+    runs-on: windows-2019
+
+    steps:
+      - name: Checkout PR merged with Master
+        uses: actions/checkout@v3
+        if: github.event_name == 'pull_request' || github.event_name == 'pull_request_target'
+        with:
+          ref: refs/pull/${{ github.event.number }}/merge
+      
+      - name: Checkout Master
+        uses: actions/checkout@v3
+        if: github.event_name != 'pull_request' && github.event_name != 'pull_request_target'        
+
+      - name: Use .NET Core SDK 5.x
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v1.2.0
+        with:
+          nuget-version: 'latest'
+
+      - name: NuGet Add Source
+        run: |
+          dotnet nuget add source --username ${{ secrets.USER }} --password ${{ secrets.PAT_GITHUB_PACKAGES_READ_WRITE }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/resgroup/index.json"          
+
+      - name: List Nuget Sources
+        run: nuget sources List
+  
+      - name: Restore RES.Configuration
+        run: dotnet restore RES.Configuration.sln
+
+      - name: Build RES.Configuration
+        run: dotnet build RES.Configuration.sln --configuration Release --no-restore
+
+      - name: Create New Project
+        run: dotnet new console --name RES.Configuration
+
+      - name: Create nuget package
+        run: |
+          dotnet pack RES.Configuration\RES.Configuration.csproj --configuration Release --no-restore --no-build --output ${{ github.workspace }}\artifacts
+
+      - name: Push to GitHub Packages
+        run: |
+          dotnet nuget push ${{ github.workspace }}\artifacts\*.nupkg --api-key ${{ secrets.PAT_GITHUB_PACKAGES_READ_WRITE }} --source "github" --skip-duplicate
+  
