@@ -48,8 +48,8 @@ jobs:
       - name: Build RES.Configuration
         run: dotnet build RES.Configuration.sln --configuration Release --no-restore
 
-      - name: Create New Project
-        run: dotnet new console --name RES.Configuration
+      # - name: Create New Project
+      #   run: dotnet new console --name RES.Configuration
 
       - name: Create nuget package
         run: |
