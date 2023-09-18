@@ -48,9 +48,6 @@ jobs:
       - name: Build RES.Configuration
         run: dotnet build RES.Configuration.sln --configuration Release --no-restore
 
-      # - name: Create New Project
-      #   run: dotnet new console --name RES.Configuration
-
       - name: Create nuget package
         run: |
           dotnet pack RES.Configuration\RES.Configuration.csproj --configuration Release --no-restore --no-build --output ${{ github.workspace }}\artifacts
